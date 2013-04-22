@@ -57,10 +57,11 @@
             android:orientation="vertical" >
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/imageHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:contentDescription="@string/CompanyName"
                 android:maxHeight="100dp"
                 android:minHeight="100dp"
                 android:scaleType="fitStart"
@@ -75,17 +76,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="150dp"
-                    android:text="Merchant ID:"
+                    android:text="@string/merchantId"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <EditText
                     android:id="@+id/editMerchantId"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:text="1234567890" />
-
+                    android:inputType="text"
+                    android:text="@string/defaultValueMerchantId" />
             </LinearLayout>
 
             <LinearLayout
@@ -111,17 +112,14 @@
 
                     <requestFocus />
                 </EditText>
-
             </LinearLayout>
 
             <Button
                 android:id="@+id/buttonPay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pay" />
-
+                android:text="@string/payButtonText" />
         </LinearLayout>
-
     </FrameLayout>
 
 </FrameLayout>
