@@ -4,5 +4,7 @@
     <string name="app_name">MashRegisterPlus</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="textPrice">Price</string>
+    <string name="defaultPriceValue">0.0</string>
 
 </resources>

@@ -4,11 +4,14 @@ import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -116,6 +119,25 @@ public class PayBaseActivity extends Activity {
 		// while interacting with the UI.
 		findViewById(R.id.dummy_button).setOnTouchListener(
 				mDelayHideTouchListener);
+
+		Button payButton = (Button) findViewById(R.id.buttonPay);
+		payButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Intent i = new Intent(this,TextEntryActivity.class);
+				// startActivityForResult(i, STATIC_INTEGER_VALUE);
+
+			}
+		});
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Tady bych mel dostavat odpoved z vyvolaneho intentu.
+		// TODO:
+		// http://stackoverflow.com/questions/1124548/how-to-pass-the-values-from-one-activity-to-previous-activity
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override
