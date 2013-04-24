@@ -127,6 +127,12 @@ public class PayBaseActivity extends Activity {
 			public void onClick(View v) {
 				// Intent i = new Intent(this,TextEntryActivity.class);
 				// startActivityForResult(i, STATIC_INTEGER_VALUE);
+				
+//				Intent intent = new Intent(getBaseContext(), BluetoothChat.class);
+//				intent.putExtra("TERMINALID", "12312312");
+//				intent.putExtra("PRICE", 12332);
+//				intent.putExtra("INVOICE", "998899");
+//				startActivityForResult(intent, 33333);
 
 			}
 		});
