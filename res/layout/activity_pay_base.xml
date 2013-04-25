@@ -73,22 +73,22 @@
 
                 <TextView
                     android:id="@+id/textMerchantId"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:minWidth="150dp"
                     android:text="@string/merchantId"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <EditText
                     android:id="@+id/editMerchantId"
-                    android:layout_width="0dip"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="text"
                     android:maxLength="8"
                     android:text="@string/defaultValueMerchantId" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -97,15 +97,16 @@
 
                 <TextView
                     android:id="@+id/textPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:minWidth="150dp"
                     android:text="@string/textPrice"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <EditText
                     android:id="@+id/editPrice"
-                    android:layout_width="0dip"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
@@ -122,20 +123,20 @@
 
                 <TextView
                     android:id="@+id/textInvoice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Invoice:"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <EditText
                     android:id="@+id/editText1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:maxLength="10"
                     android:text="1234" />
-
             </LinearLayout>
 
             <Button
@@ -143,7 +144,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/payButtonText" />
+
+            <TextView
+                android:id="@+id/textAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Answer:"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/textResponseCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textServerMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
         </LinearLayout>
+
     </FrameLayout>
 
 </FrameLayout>

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -24,6 +25,8 @@ import android.widget.Toast;
  * @see SystemUiHider
  */
 public class PayBaseActivity extends Activity {
+	private static final int ACTIVITY_INTENT_ID = 33333;
+
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -55,6 +58,8 @@ public class PayBaseActivity extends Activity {
 	private EditText mTerminalIdEditText;
 	private EditText mAmountIdEditText;
 	private EditText mInvoiceIdEditText;
+	private TextView mResponseCodeTextView;
+	private TextView mServerMessageTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +137,9 @@ public class PayBaseActivity extends Activity {
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editText1);
 
+		mResponseCodeTextView = (TextView) findViewById(R.id.textResponseCode);
+		mServerMessageTextView = (TextView) findViewById(R.id.textServerMessage);
+
 		Button payButton = (Button) findViewById(R.id.buttonPay);
 		payButton.setOnClickListener(new OnClickListener() {
 
@@ -148,7 +156,7 @@ public class PayBaseActivity extends Activity {
 						.toString());
 
 				if (intent.resolveActivity(getPackageManager()) != null) {
-					startActivityForResult(intent, 33333);
+					startActivityForResult(intent, ACTIVITY_INTENT_ID);
 				} else {
 					Toast.makeText(getApplicationContext(),
 							"You must install BlueTerm", Toast.LENGTH_LONG)
@@ -163,10 +171,20 @@ public class PayBaseActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Tady bych mel dostavat odpoved z vyvolaneho intentu.
-		// TODO:
-		// http://stackoverflow.com/questions/1124548/how-to-pass-the-values-from-one-activity-to-previous-activity
 		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) {
+		case ACTIVITY_INTENT_ID:
+			if (data.hasExtra("ResultCode")) {
+				String tmp = data.getStringExtra("ResultCode");
+				mResponseCodeTextView.setText(tmp);
+			}
+			if (data.hasExtra("ServerMessage")) {
+				String tmp = data.getStringExtra("ServerMessage");
+				mServerMessageTextView.setText(tmp);
+			}
+			break;
+		}
 	}
 
 	@Override
