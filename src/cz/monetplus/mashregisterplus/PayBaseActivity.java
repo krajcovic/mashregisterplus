@@ -1,5 +1,7 @@
 package cz.monetplus.mashregisterplus;
 
+import org.apache.http.protocol.HTTP;
+
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -12,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -47,6 +51,10 @@ public class PayBaseActivity extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
+
+	private EditText mTerminalIdEditText;
+	private EditText mAmountIdEditText;
+	private EditText mInvoiceIdEditText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,19 +128,34 @@ public class PayBaseActivity extends Activity {
 		findViewById(R.id.dummy_button).setOnTouchListener(
 				mDelayHideTouchListener);
 
+		mTerminalIdEditText = (EditText) findViewById(R.id.editMerchantId);
+		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
+		mInvoiceIdEditText = (EditText) findViewById(R.id.editText1);
+
 		Button payButton = (Button) findViewById(R.id.buttonPay);
 		payButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// Intent i = new Intent(this,TextEntryActivity.class);
-				// startActivityForResult(i, STATIC_INTEGER_VALUE);
-				
-//				Intent intent = new Intent(getBaseContext(), BluetoothChat.class);
-//				intent.putExtra("TERMINALID", "12312312");
-//				intent.putExtra("PRICE", 12332);
-//				intent.putExtra("INVOICE", "998899");
-//				startActivityForResult(intent, 33333);
+				Intent intent = new Intent(Intent.ACTION_SENDTO);
+				intent.addCategory(Intent.CATEGORY_DEFAULT);
+				intent.setType(HTTP.PLAIN_TEXT_TYPE);
+				intent.putExtra("TerminalId", mTerminalIdEditText.getText()
+						.toString());
+				intent.putExtra("Amount", mAmountIdEditText.getText()
+						.toString());
+				intent.putExtra("Invoice", mInvoiceIdEditText.getText()
+						.toString());
+
+				if (intent.resolveActivity(getPackageManager()) != null) {
+					startActivityForResult(intent, 33333);
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"You must install BlueTerm", Toast.LENGTH_LONG)
+							.show();
+				}
+
+				// startActivity(intent);
 
 			}
 		});
