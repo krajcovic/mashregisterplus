@@ -175,13 +175,15 @@ public class PayBaseActivity extends Activity {
 
 		switch (requestCode) {
 		case ACTIVITY_INTENT_ID:
-			if (data.hasExtra("ResultCode")) {
-				String tmp = data.getStringExtra("ResultCode");
-				mResponseCodeTextView.setText(tmp);
-			}
-			if (data.hasExtra("ServerMessage")) {
-				String tmp = data.getStringExtra("ServerMessage");
-				mServerMessageTextView.setText(tmp);
+			if (data != null) {
+				if (data.hasExtra("ResultCode")) {
+					String tmp = data.getStringExtra("ResultCode");
+					mResponseCodeTextView.setText(tmp);
+				}
+				if (data.hasExtra("ServerMessage")) {
+					String tmp = data.getStringExtra("ServerMessage");
+					mServerMessageTextView.setText(tmp);
+				}
 			}
 			break;
 		}

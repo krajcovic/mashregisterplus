@@ -5,7 +5,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="textPrice">Price:</string>
-    <string name="defaultPriceValue">0.0</string>
+    <string name="defaultPriceValue">13.59</string>
     <string name="defaultValueMerchantId">12345678</string>
     <string name="merchantId">Merchant ID:</string>
     <string name="payButtonText">Pay</string>
