@@ -1,5 +1,8 @@
 package cz.monetplus.mashregisterplus;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 import org.apache.http.protocol.HTTP;
 
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
@@ -13,8 +16,12 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,11 +62,12 @@ public class PayBaseActivity extends Activity {
 	 */
 	private SystemUiHider mSystemUiHider;
 
-	private EditText mTerminalIdEditText;
 	private EditText mAmountIdEditText;
+	private Spinner mCurrencySpinner;
 	private EditText mInvoiceIdEditText;
-	private TextView mResponseCodeTextView;
-	private TextView mServerMessageTextView;
+	private TextView mAnswerTextView;
+
+	private String currentCurrency;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,12 +141,38 @@ public class PayBaseActivity extends Activity {
 		findViewById(R.id.dummy_button).setOnTouchListener(
 				mDelayHideTouchListener);
 
-		mTerminalIdEditText = (EditText) findViewById(R.id.editMerchantId);
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
-		mInvoiceIdEditText = (EditText) findViewById(R.id.editText1);
+		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
+		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
 
-		mResponseCodeTextView = (TextView) findViewById(R.id.textResponseCode);
-		mServerMessageTextView = (TextView) findViewById(R.id.textServerMessage);
+		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
+
+		// Create an ArrayAdapter using the string array and a default spinner
+		// layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				this, R.array.currency_array,
+				android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		mCurrencySpinner.setAdapter(adapter);
+		mCurrencySpinner
+				.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+					@Override
+					public void onItemSelected(AdapterView<?> parent,
+							View arg1, int pos, long arg3) {
+						// TODO Auto-generated method stub
+						currentCurrency = parent.getItemAtPosition(pos)
+								.toString();
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 
 		Button payButton = (Button) findViewById(R.id.buttonPay);
 		payButton.setOnClickListener(new OnClickListener() {
@@ -148,10 +182,9 @@ public class PayBaseActivity extends Activity {
 				Intent intent = new Intent(Intent.ACTION_SENDTO);
 				intent.addCategory(Intent.CATEGORY_DEFAULT);
 				intent.setType(HTTP.PLAIN_TEXT_TYPE);
-				intent.putExtra("TerminalId", mTerminalIdEditText.getText()
-						.toString());
 				intent.putExtra("Amount", mAmountIdEditText.getText()
 						.toString());
+				intent.putExtra("Currency", currentCurrency);
 				intent.putExtra("Invoice", mInvoiceIdEditText.getText()
 						.toString());
 
@@ -175,15 +208,37 @@ public class PayBaseActivity extends Activity {
 
 		switch (requestCode) {
 		case ACTIVITY_INTENT_ID:
+			StringBuilder out = new StringBuilder();
 			if (data != null) {
 				if (data.hasExtra("ResultCode")) {
-					String tmp = data.getStringExtra("ResultCode");
-					mResponseCodeTextView.setText(tmp);
+					out.append("ResultCode:"
+							+ data.getStringExtra("ResultCode") + "\n");
 				}
 				if (data.hasExtra("ServerMessage")) {
-					String tmp = data.getStringExtra("ServerMessage");
-					mServerMessageTextView.setText(tmp);
+					out.append("ServerMessage:"
+							+ data.getStringExtra("ServerMessage") + "\n");
 				}
+
+				if (data.hasExtra("AuthCode")) {
+					out.append("AuthCode:" + data.getStringExtra("AuthCode")
+							+ "\n");
+				}
+
+				if (data.hasExtra("SeqId")) {
+					out.append("SeqId:" + data.getStringExtra("SeqId") + "\n");
+				}
+
+				if (data.hasExtra("CardNumber")) {
+					out.append("CardNumber:"
+							+ data.getStringExtra("CardNumber") + "\n");
+				}
+
+				if (data.hasExtra("CardType")) {
+					out.append("CardType:" + data.getStringExtra("CardType")
+							+ "\n");
+				}
+
+				mAnswerTextView.setText(out.toString());
 			}
 			break;
 		}
