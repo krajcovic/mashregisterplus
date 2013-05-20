@@ -42,15 +42,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Bluetooth addr:"
+                android:text="BT addr:"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <Spinner
-                android:id="@+id/spinner1"
+            <TextView
+                android:id="@+id/textViewHw"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="00:03:81:99:4F:DA"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
+            <Button
+                android:id="@+id/buttonHwSelect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Select device" />
         </LinearLayout>
 
         <LinearLayout
@@ -154,7 +162,6 @@
                     android:layout_height="match_parent"
                     android:text="Result from terminal"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

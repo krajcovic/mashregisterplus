@@ -38,33 +38,11 @@ import android.widget.Toast;
 public class PayBaseActivity extends Activity {
 	private static final int ACTIVITY_INTENT_ID = 33333;
 
-	/**
-	 * Whether or not the system UI should be auto-hidden after
-	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-	 */
-	private static final boolean AUTO_HIDE = true;
-
-	/**
-	 * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-	 * user interaction before hiding the system UI.
-	 */
-	private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-	/**
-	 * If set, will toggle the system UI visibility upon interaction. Otherwise,
-	 * will show the system UI visibility upon interaction.
-	 */
-	private static final boolean TOGGLE_ON_CLICK = true;
-
-	/**
-	 * The flags to pass to {@link SystemUiHider#getInstance}.
-	 */
-	private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-
-	/**
-	 * The instance of the {@link SystemUiHider} for this activity.
-	 */
-	private SystemUiHider mSystemUiHider;
+	// Intent request codes
+	private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+	private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+	private static final int REQUEST_ENABLE_BT = 3;
+	private static final int REQUEST_PREFERENCE = 4;
 
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
@@ -72,6 +50,7 @@ public class PayBaseActivity extends Activity {
 	private TextView mAnswerTextView;
 
 	private String currentCurrency;
+	private TextView blueHwAddress;
 
 	Timer timer = new Timer();
 
@@ -79,11 +58,11 @@ public class PayBaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-	    getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
 		setContentView(R.layout.activity_pay_base);
-		
-	    ActionBar actionBar = getActionBar();
-	    actionBar.show();
+
+		ActionBar actionBar = getActionBar();
+		actionBar.show();
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
@@ -157,7 +136,7 @@ public class PayBaseActivity extends Activity {
 					ShowTransactionOut(new TransactionOut());
 					MonetBTAPI btapi = new MonetBTAPI();
 					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress("00:03:81:99:4F:DA");
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.PAY);
 					transIn.setAmount(Integer.valueOf((int) (Double
 							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
@@ -182,7 +161,7 @@ public class PayBaseActivity extends Activity {
 					ShowTransactionOut(new TransactionOut());
 					MonetBTAPI btapi = new MonetBTAPI();
 					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress("00:03:81:99:4F:DA");
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.HANDSHAKE);
 					if (btapi.doTransaction(getApplicationContext(), transIn)) {
 						timer.schedule(new CheckResult(btapi), 0, 500);
@@ -194,6 +173,22 @@ public class PayBaseActivity extends Activity {
 				}
 			}
 		});
+
+		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
+		buttonSelect.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launch the DeviceListActivity to see devices and do scan
+				Intent serverIntent = new Intent(getApplicationContext(),
+						DeviceListActivity.class);
+				startActivityForResult(serverIntent,
+						REQUEST_CONNECT_DEVICE_INSECURE);
+
+			}
+		});
+
+		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
 	}
 
 	class CheckResult extends TimerTask {
@@ -243,38 +238,50 @@ public class PayBaseActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		switch (requestCode) {
+		case REQUEST_CONNECT_DEVICE_INSECURE:
+			if (resultCode == Activity.RESULT_OK) {
+				if (data.hasExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS)) {
+					blueHwAddress
+							.setText(data
+									.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
+				}
+			}
+			break;
 		case ACTIVITY_INTENT_ID:
-			StringBuilder out = new StringBuilder();
-			if (data != null) {
-				if (data.hasExtra("ResultCode")) {
-					out.append("ResultCode:"
-							+ data.getStringExtra("ResultCode") + "\n");
-				}
-				if (data.hasExtra("ServerMessage")) {
-					out.append("ServerMessage:"
-							+ data.getStringExtra("ServerMessage") + "\n");
-				}
+			if (resultCode == Activity.RESULT_OK) {
+				StringBuilder out = new StringBuilder();
+				if (data != null) {
+					if (data.hasExtra("ResultCode")) {
+						out.append("ResultCode:"
+								+ data.getStringExtra("ResultCode") + "\n");
+					}
+					if (data.hasExtra("ServerMessage")) {
+						out.append("ServerMessage:"
+								+ data.getStringExtra("ServerMessage") + "\n");
+					}
 
-				if (data.hasExtra("AuthCode")) {
-					out.append("AuthCode:" + data.getStringExtra("AuthCode")
-							+ "\n");
-				}
+					if (data.hasExtra("AuthCode")) {
+						out.append("AuthCode:"
+								+ data.getStringExtra("AuthCode") + "\n");
+					}
 
-				if (data.hasExtra("SeqId")) {
-					out.append("SeqId:" + data.getStringExtra("SeqId") + "\n");
-				}
+					if (data.hasExtra("SeqId")) {
+						out.append("SeqId:" + data.getStringExtra("SeqId")
+								+ "\n");
+					}
 
-				if (data.hasExtra("CardNumber")) {
-					out.append("CardNumber:"
-							+ data.getStringExtra("CardNumber") + "\n");
-				}
+					if (data.hasExtra("CardNumber")) {
+						out.append("CardNumber:"
+								+ data.getStringExtra("CardNumber") + "\n");
+					}
 
-				if (data.hasExtra("CardType")) {
-					out.append("CardType:" + data.getStringExtra("CardType")
-							+ "\n");
-				}
+					if (data.hasExtra("CardType")) {
+						out.append("CardType:"
+								+ data.getStringExtra("CardType") + "\n");
+					}
 
-				mAnswerTextView.setText(out.toString());
+					mAnswerTextView.setText(out.toString());
+				}
 			}
 			break;
 		}
