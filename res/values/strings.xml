@@ -10,5 +10,14 @@
     <string name="merchantId">Merchant ID:</string>
     <string name="payButtonText">Pay with intent</string>
     <string name="CompanyName">Monet+ a.s.</string>
+    <string name="TextBTAddr">BT addr:</string>
+    <string name="testedBTHWAddress">00:03:81:99:4F:DA</string>
+    <string name="select_device">Select device</string>
+    <string name="text_currency">Currency:</string>
+    <string name="text_invoice">Invoice:</string>
+    <string name="text_invoice_default_value">1234</string>
+    <string name="dotransactionhandshake">doTransactionHandshake</string>
+    <string name="dotransactionpay">doTransactionPay</string>
+    <string name="terminal_result">Result from terminal</string>
 
 </resources>
