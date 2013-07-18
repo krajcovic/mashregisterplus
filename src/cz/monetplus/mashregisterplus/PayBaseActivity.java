@@ -97,30 +97,23 @@ public class PayBaseActivity extends Activity {
 					}
 				});
 
-		Button payButton = (Button) findViewById(R.id.buttonPay);
-		payButton.setOnClickListener(new OnClickListener() {
+		Button infoButton = (Button) findViewById(R.id.buttonInfo);
+		infoButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_SENDTO);
-				intent.addCategory(Intent.CATEGORY_DEFAULT);
-				intent.setType(HTTP.PLAIN_TEXT_TYPE);
-				intent.putExtra("Amount", mAmountIdEditText.getText()
-						.toString());
-				intent.putExtra("Currency", currentCurrency);
-				intent.putExtra("Invoice", mInvoiceIdEditText.getText()
-						.toString());
+				try {
+					ShowTransactionOut(new TransactionOut());
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					transIn.setCommand(TransactionCommand.INFO);
 
-				if (intent.resolveActivity(getPackageManager()) != null) {
-					startActivityForResult(intent, ACTIVITY_INTENT_ID);
-				} else {
-					Toast.makeText(getApplicationContext(),
-							"You must install BlueTerm", Toast.LENGTH_LONG)
-							.show();
+					new DoTransactionTask().execute(transIn);
+
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(),
+							Toast.LENGTH_LONG).show();
 				}
-
-				// startActivity(intent);
-
 			}
 		});
 
@@ -130,8 +123,7 @@ public class PayBaseActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					ShowTransactionOut(new TransactionOut());
-					MonetBTAPI btapi = new MonetBTAPI();
+					//ShowTransactionOut(new TransactionOut());
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.PAY);
@@ -139,9 +131,9 @@ public class PayBaseActivity extends Activity {
 							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 					transIn.setCurrency(Integer.valueOf(currentCurrency));
 					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
-					if (btapi.doTransaction(getApplicationContext(), transIn)) {
-						timer.schedule(new CheckResult(btapi), 0, 500);
-					}
+
+					new DoTransactionTask().execute(transIn);
+
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
 							Toast.LENGTH_LONG).show();
@@ -155,14 +147,12 @@ public class PayBaseActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					ShowTransactionOut(new TransactionOut());
-					MonetBTAPI btapi = new MonetBTAPI();
+					//ShowTransactionOut(new TransactionOut());
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.HANDSHAKE);
-					if (btapi.doTransaction(getApplicationContext(), transIn)) {
-						timer.schedule(new CheckResult(btapi), 0, 500);
-					}
+
+					new DoTransactionTask().execute(transIn);
 
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
@@ -186,28 +176,6 @@ public class PayBaseActivity extends Activity {
 		});
 
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
-	}
-
-	class CheckResult extends TimerTask {
-
-		MonetBTAPI api;
-
-		private CheckResult(MonetBTAPI api) {
-			super();
-			this.api = api;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			if (api != null) {
-				if (api.isTransactionFinished()) {
-					ShowTransactionOut(api.getTransactionResult());
-					this.cancel();
-				}
-			}
-
-		}
 	}
 
 	private void ShowTransactionOut(TransactionOut out) {
@@ -284,30 +252,14 @@ public class PayBaseActivity extends Activity {
 		}
 	}
 
-	@Deprecated
-	class DoTransactionTask extends AsyncTask<Void, Void, Boolean> {
-
-		private TransactionIn transIn;
-		private TransactionOut transOut;
-
-		private DoTransactionTask(TransactionIn transIn, TransactionOut transOut) {
-			super();
-			this.transIn = transIn;
-			this.transOut = transOut;
-		}
+	class DoTransactionTask extends
+			AsyncTask<TransactionIn, Void, TransactionOut> {
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-			Looper.prepare();
+		protected TransactionOut doInBackground(TransactionIn... params) {
 			MonetBTAPI api = new MonetBTAPI();
+			return api.doTransaction(getApplicationContext(), params[0]);
 
-			Boolean result = api
-					.doTransaction(getApplicationContext(), transIn);
-
-			Looper.loop();
-
-			return result;
 		}
 
 		@Override
@@ -317,9 +269,9 @@ public class PayBaseActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(TransactionOut result) {
 			// do the analysis of the returned data of the function
-			ShowTransactionOut(transOut);
+			ShowTransactionOut(result);
 		}
 
 	}

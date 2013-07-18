@@ -19,5 +19,7 @@
     <string name="dotransactionhandshake">doTransactionHandshake</string>
     <string name="dotransactionpay">doTransactionPay</string>
     <string name="terminal_result">Result from terminal</string>
+    <string name="infoButtonText">Terminal info</string>   
+
 
 </resources>
