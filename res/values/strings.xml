@@ -5,7 +5,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="textPrice">Price:</string>
-    <string name="defaultPriceValue">9.90</string>
+    <string name="defaultPriceValue"></string>
     <string name="defaultValueMerchantId">12345678</string>
     <string name="merchantId">Merchant ID:</string>
     <string name="payButtonText">Pay with intent</string>
@@ -15,11 +15,10 @@
     <string name="select_device">Select device</string>
     <string name="text_currency">Currency:</string>
     <string name="text_invoice">Invoice:</string>
-    <string name="text_invoice_default_value">1234</string>
-    <string name="dotransactionhandshake">doTransactionHandshake</string>
-    <string name="dotransactionpay">doTransactionPay</string>
+    <string name="text_invoice_default_value"></string>
+    <string name="dotransactionhandshake">Handshake</string>
+    <string name="dotransactionpay">Pay</string>
     <string name="terminal_result">Result from terminal</string>
-    <string name="infoButtonText">Terminal info</string>   
-
+    <string name="infoButtonText">Terminal info</string>
 
 </resources>

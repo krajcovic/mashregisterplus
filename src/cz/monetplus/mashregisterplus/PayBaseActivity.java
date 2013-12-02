@@ -1,22 +1,18 @@
 package cz.monetplus.mashregisterplus;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.protocol.HTTP;
-
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
 import cz.monetplus.blueterm.TransactionOut;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -41,6 +37,8 @@ public class PayBaseActivity extends Activity {
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE_INSECURE = 33334;
 
+	// private final ReentrantLock lock = new ReentrantLock();
+
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
 	private EditText mInvoiceIdEditText;
@@ -49,7 +47,9 @@ public class PayBaseActivity extends Activity {
 	private String currentCurrency;
 	private TextView blueHwAddress;
 
-	Timer timer = new Timer();
+	DoTransactionTask transactionTask = null;
+
+	private Menu propertiesMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +57,7 @@ public class PayBaseActivity extends Activity {
 
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
 		setContentView(R.layout.activity_pay_base);
-
-		ActionBar actionBar = getActionBar();
-		actionBar.show();
+		getActionBar().show();
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
@@ -103,12 +101,18 @@ public class PayBaseActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					ShowTransactionOut(new TransactionOut());
+					// ShowTransactionOut(new TransactionOut());
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.INFO);
 
-					new DoTransactionTask().execute(transIn);
+					if (transactionTask != null) {
+						transactionTask.cancel(true);
+						transactionTask = null;
+					}
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
 
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
@@ -123,7 +127,7 @@ public class PayBaseActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					//ShowTransactionOut(new TransactionOut());
+					// ShowTransactionOut(new TransactionOut());
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.PAY);
@@ -132,7 +136,13 @@ public class PayBaseActivity extends Activity {
 					transIn.setCurrency(Integer.valueOf(currentCurrency));
 					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
 
-					new DoTransactionTask().execute(transIn);
+					if (transactionTask != null) {
+						transactionTask.cancel(true);
+						transactionTask = null;
+					}
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
 
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
@@ -147,12 +157,18 @@ public class PayBaseActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					//ShowTransactionOut(new TransactionOut());
+					// ShowTransactionOut(new TransactionOut());
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.HANDSHAKE);
 
-					new DoTransactionTask().execute(transIn);
+					if (transactionTask != null) {
+						transactionTask.cancel(true);
+						transactionTask = null;
+					}
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
 
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
@@ -178,10 +194,35 @@ public class PayBaseActivity extends Activity {
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.properties_menu, menu);
+		propertiesMenu = menu;
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case R.id.bt_enabled:
+			item.setChecked(true);
+			propertiesMenu.findItem(R.id.tcp_enabled).setChecked(false);
+			break;
+		case R.id.tcp_enabled:
+			item.setChecked(true);
+			propertiesMenu.findItem(R.id.bt_enabled).setChecked(false);
+			break;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
 	private void ShowTransactionOut(TransactionOut out) {
 		final StringBuilder resultString = new StringBuilder();
 		resultString.append("ResultCode:" + out.getResultCode() + "\n");
-		resultString.append("ServerMessage:" + out.getServerMessage() + "\n");
+		resultString.append("Message:" + out.getMessage() + "\n");
 
 		resultString.append("AuthCode:" + out.getAuthCode() + "\n");
 		resultString.append("SeqId:" + out.getSeqId() + "\n");
@@ -257,8 +298,14 @@ public class PayBaseActivity extends Activity {
 
 		@Override
 		protected TransactionOut doInBackground(TransactionIn... params) {
-			MonetBTAPI api = new MonetBTAPI();
-			return api.doTransaction(getApplicationContext(), params[0]);
+
+			// TransactionOut out = new TransactionOut();
+
+			//MonetBTAPI api = new MonetBTAPI();
+
+			return MonetBTAPI.doTransaction(getApplicationContext(), params[0]);
+
+			// return out;
 
 		}
 
@@ -272,7 +319,7 @@ public class PayBaseActivity extends Activity {
 		protected void onPostExecute(TransactionOut result) {
 			// do the analysis of the returned data of the function
 			ShowTransactionOut(result);
+			transactionTask = null;
 		}
-
 	}
 }
