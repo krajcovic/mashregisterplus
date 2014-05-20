@@ -1,11 +1,5 @@
 package cz.monetplus.mashregisterplus;
 
-import cz.monetplus.blueterm.MonetBTAPI;
-import cz.monetplus.blueterm.TransactionCommand;
-import cz.monetplus.blueterm.TransactionIn;
-import cz.monetplus.blueterm.TransactionOut;
-import cz.monetplus.mashregisterplus.util.SystemUiHider;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -24,6 +18,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import cz.monetplus.blueterm.MonetBTAPI;
+import cz.monetplus.blueterm.TransactionCommand;
+import cz.monetplus.blueterm.TransactionIn;
+import cz.monetplus.blueterm.TransactionInVx600;
+import cz.monetplus.blueterm.TransactionOut;
+import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -102,8 +102,9 @@ public class PayBaseActivity extends Activity {
 			public void onClick(View v) {
 				try {
 					// ShowTransactionOut(new TransactionOut());
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					mAnswerTextView.setText("Calling info...");
+					TransactionIn transIn = new TransactionInVx600();
+					// transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.INFO);
 
 					if (transactionTask != null) {
@@ -128,8 +129,9 @@ public class PayBaseActivity extends Activity {
 			public void onClick(View v) {
 				try {
 					// ShowTransactionOut(new TransactionOut());
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					mAnswerTextView.setText("Calling pay...");
+					TransactionIn transIn = new TransactionInVx600();
+					// transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.PAY);
 					transIn.setAmount(Integer.valueOf((int) (Double
 							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
@@ -157,9 +159,10 @@ public class PayBaseActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				try {
-					// ShowTransactionOut(new TransactionOut());
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					// ShowTransactionOut(new TransactionOu));
+					mAnswerTextView.setText("Calling handshake...");
+					TransactionIn transIn = new TransactionInVx600();
+					// transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.HANDSHAKE);
 
 					if (transactionTask != null) {
@@ -169,6 +172,49 @@ public class PayBaseActivity extends Activity {
 
 					transactionTask = new DoTransactionTask();
 					transactionTask.execute(transIn);
+
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		Button connectButton = (Button) findViewById(R.id.buttonConnect);
+		connectButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				try {
+					// ShowTransactionOut(new TransactionOu));
+					mAnswerTextView.setText("Calling connecting...");
+					TransactionIn transIn = new TransactionInVx600();
+					transIn.setCommand(TransactionCommand.ONLYCONNECT);
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
+
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
+
+			}
+		});
+
+		Button disconnectButton = (Button) findViewById(R.id.buttonDisconnect);
+		disconnectButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mAnswerTextView.setText("Calling disconnecting...");
+				try {
+					// TODO: precti si poradne dokumentaci.... ackoliv je to
+					// asynchroni task, tak se vyhybaji paralelnimu vykonavani.
+					// DoCancelTask doCancelTask = new DoCancelTask();
+					// doCancelTask.execute();
+
+					MonetBTAPI.doCancel();
 
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
@@ -219,15 +265,23 @@ public class PayBaseActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void ShowMessage(String message) {
+
+	}
+
 	private void ShowTransactionOut(TransactionOut out) {
 		final StringBuilder resultString = new StringBuilder();
-		resultString.append("ResultCode:" + out.getResultCode() + "\n");
-		resultString.append("Message:" + out.getMessage() + "\n");
+		if (out != null) {
+			resultString.append("ResultCode:" + out.getResultCode() + "\n");
+			resultString.append("Message:" + out.getMessage() + "\n");
 
-		resultString.append("AuthCode:" + out.getAuthCode() + "\n");
-		resultString.append("SeqId:" + out.getSeqId() + "\n");
-		resultString.append("CardNumber:" + out.getCardNumber() + "\n");
-		resultString.append("CardType:" + out.getCardType() + "\n");
+			resultString.append("AuthCode:" + out.getAuthCode() + "\n");
+			resultString.append("SeqId:" + out.getSeqId() + "\n");
+			resultString.append("CardNumber:" + out.getCardNumber() + "\n");
+			resultString.append("CardType:" + out.getCardType() + "\n");
+		} else {
+			resultString.append("NULL returned!!!");
+		}
 
 		PayBaseActivity.this.runOnUiThread(new Runnable() {
 
@@ -298,20 +352,12 @@ public class PayBaseActivity extends Activity {
 
 		@Override
 		protected TransactionOut doInBackground(TransactionIn... params) {
-
-			// TransactionOut out = new TransactionOut();
-
-			//MonetBTAPI api = new MonetBTAPI();
-
-			return MonetBTAPI.doTransaction(getApplicationContext(), params[0]);
-
-			// return out;
-
+			return MonetBTAPI.doTransaction(
+			/* getApplicationContext() */PayBaseActivity.this, params[0]);
 		}
 
 		@Override
 		protected void onProgressUpdate(Void... values) {
-			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 		}
 
@@ -321,5 +367,27 @@ public class PayBaseActivity extends Activity {
 			ShowTransactionOut(result);
 			transactionTask = null;
 		}
+	}
+
+	class DoCancelTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			MonetBTAPI.doCancel();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			PayBaseActivity.this.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					mAnswerTextView.setText("MonetBTApi is closed. maybe.");
+
+				}
+			});
+		}
+
 	}
 }
