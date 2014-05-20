@@ -25,7 +25,19 @@
     android:layout_height="match_parent"
     android:background="#0099cc"
     android:orientation="vertical" >
+
     <!-- tools:context=".PayBaseActivity"  > -->
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/linearLayoutAds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingPrefix" >
+
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -37,7 +49,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <!-- <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible" >
@@ -64,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/select_device" />
-            </LinearLayout>
+            </LinearLayout> -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,7 +106,6 @@
                     android:ems="10"
                     android:inputType="numberDecimal"
                     android:text="80" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -124,7 +135,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -159,7 +169,6 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:text="for future reference" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -200,7 +209,6 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:text="Disconnect" />
-
             </LinearLayout>
 
             <TextView

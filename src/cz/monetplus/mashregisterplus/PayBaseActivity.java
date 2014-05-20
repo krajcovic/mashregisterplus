@@ -15,9 +15,15 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -51,6 +57,11 @@ public class PayBaseActivity extends Activity {
 
 	private Menu propertiesMenu;
 
+	private AdView adView;
+
+	/* Your ad unit id. Replace with your actual ad unit id. */
+	private static final String AD_UNIT_ID = "ca-app-pub-4197154738167514/1390370981";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,6 +69,25 @@ public class PayBaseActivity extends Activity {
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
 		setContentView(R.layout.activity_pay_base);
 		getActionBar().show();
+
+		// Create an ad.
+		adView = new AdView(this);
+		adView.setAdSize(AdSize.BANNER);
+		adView.setAdUnitId(AD_UNIT_ID);
+
+		// Add the AdView to the view hierarchy. The view will have no size
+		// until the ad is loaded.
+		LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayoutAds);
+		layout.addView(adView);
+
+		// Create an ad request. Check logcat output for the hashed device ID to
+		// get test ads on a physical device.
+		AdRequest adRequest = new AdRequest.Builder()
+				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+				.addTestDevice("AAA780CD3E74B3969124CE8589CC2C28").build();
+
+		// Start loading the ad in the background.
+		adView.loadAd(adRequest);
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
@@ -223,21 +253,21 @@ public class PayBaseActivity extends Activity {
 			}
 		});
 
-		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
-		buttonSelect.setOnClickListener(new OnClickListener() {
+		// Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
+		// buttonSelect.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// // Launch the DeviceListActivity to see devices and do scan
+		// Intent serverIntent = new Intent(getApplicationContext(),
+		// DeviceListActivity.class);
+		// startActivityForResult(serverIntent,
+		// REQUEST_CONNECT_DEVICE_INSECURE);
+		//
+		// }
+		// });
 
-			@Override
-			public void onClick(View v) {
-				// Launch the DeviceListActivity to see devices and do scan
-				Intent serverIntent = new Intent(getApplicationContext(),
-						DeviceListActivity.class);
-				startActivityForResult(serverIntent,
-						REQUEST_CONNECT_DEVICE_INSECURE);
-
-			}
-		});
-
-		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+		// blueHwAddress = (TextView) findViewById(R.id.textViewHw);
 	}
 
 	@Override
@@ -390,4 +420,33 @@ public class PayBaseActivity extends Activity {
 		}
 
 	}
+
+	@Override
+	protected void onDestroy() {
+		if (adView != null) {
+			adView.resume();
+		}
+		super.onDestroy();
+
+	}
+
+	@Override
+	protected void onPause() {
+		if (adView != null) {
+			adView.resume();
+		}
+
+		super.onPause();
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (adView != null) {
+			adView.resume();
+		}
+	}
+
 }
