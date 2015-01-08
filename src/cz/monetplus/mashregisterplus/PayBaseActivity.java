@@ -28,7 +28,6 @@ import com.google.android.gms.ads.AdView;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
-import cz.monetplus.blueterm.TransactionInVx600;
 import cz.monetplus.blueterm.TransactionOut;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
@@ -134,8 +133,9 @@ public class PayBaseActivity extends Activity {
 				try {
 					// ShowTransactionOut(new TransactionOut());
 					mAnswerTextView.setText("Calling info...");
-					TransactionIn transIn = new TransactionInVx600();
-					// transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					// TransactionIn transIn = new TransactionInVx600();
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.INFO);
 
 					if (transactionTask != null) {
@@ -161,8 +161,8 @@ public class PayBaseActivity extends Activity {
 				try {
 					// ShowTransactionOut(new TransactionOut());
 					mAnswerTextView.setText("Calling pay...");
-					TransactionIn transIn = new TransactionInVx600();
-					// transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.PAY);
 					transIn.setAmount(Integer.valueOf((int) (Double
 							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
@@ -192,8 +192,8 @@ public class PayBaseActivity extends Activity {
 				try {
 					// ShowTransactionOut(new TransactionOu));
 					mAnswerTextView.setText("Calling handshake...");
-					TransactionIn transIn = new TransactionInVx600();
-					// transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.HANDSHAKE);
 
 					if (transactionTask != null) {
@@ -219,7 +219,8 @@ public class PayBaseActivity extends Activity {
 				try {
 					// ShowTransactionOut(new TransactionOu));
 					mAnswerTextView.setText("Calling connecting...");
-					TransactionIn transIn = new TransactionInVx600();
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.ONLYCONNECT);
 
 					transactionTask = new DoTransactionTask();
@@ -254,21 +255,21 @@ public class PayBaseActivity extends Activity {
 			}
 		});
 
-		// Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
-		// buttonSelect.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// // Launch the DeviceListActivity to see devices and do scan
-		// Intent serverIntent = new Intent(getApplicationContext(),
-		// DeviceListActivity.class);
-		// startActivityForResult(serverIntent,
-		// REQUEST_CONNECT_DEVICE_INSECURE);
-		//
-		// }
-		// });
+		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
+		buttonSelect.setOnClickListener(new OnClickListener() {
 
-		// blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+			@Override
+			public void onClick(View v) {
+				// Launch the DeviceListActivity to see devices and do scan
+				Intent serverIntent = new Intent(getApplicationContext(),
+						DeviceListActivity.class);
+				startActivityForResult(serverIntent,
+						REQUEST_CONNECT_DEVICE_INSECURE);
+
+			}
+		});
+
+		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
 	}
 
 	@Override
