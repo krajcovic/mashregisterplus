@@ -15,10 +15,13 @@
     <string name="select_device">Select device</string>
     <string name="text_currency">Currency:</string>
     <string name="text_invoice">Invoice:</string>
-    <string name="text_invoice_default_value">12345678</string>
+    <string name="text_invoice_default_value">1234567890</string>
+    <string name="text_tranid_default_value">1234567890</string>
     <string name="dotransactionhandshake">Handshake</string>
     <string name="dotransactionpay">Pay</string>
     <string name="terminal_result">Result from terminal</string>
     <string name="infoButtonText">Terminal info</string>
+    <string name="doRecharging">EMV dobití</string>
+    <string name="text_invoice_tranid">Inv/Tran:</string>
 
 </resources>

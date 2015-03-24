@@ -36,7 +36,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:ignore="MissingPrefix" >
-
     </LinearLayout>
 
     <ScrollView
@@ -80,7 +79,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="0dp"
+                android:visibility="invisible" >
 
                 <TextView
                     android:id="@+id/textViewHost"
@@ -110,7 +110,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
 
                 <TextView
                     android:id="@+id/textPrice"
@@ -133,7 +134,7 @@
                 <Spinner
                     android:id="@+id/spinnerCurrency"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="41dp"
                     android:layout_weight="1" />
             </LinearLayout>
 
@@ -146,7 +147,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/text_invoice"
+                    android:text="@string/text_invoice_tranid"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <EditText
@@ -163,17 +164,39 @@
                 </EditText>
 
                 <EditText
-                    android:id="@+id/editText1"
+                    android:id="@+id/editTextTranId"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:text="for future reference" />
+                    android:inputType="text"
+                    android:maxLength="10"
+                    android:text="@string/text_tranid_default_value" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp" >
+                android:layout_height="50dp" >
+
+                <Button
+                    android:id="@+id/buttonConnect"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Connect" />
+
+                <Button
+                    android:id="@+id/buttonDisconnect"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Disconnect" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp" >
 
                 <Button
                     android:id="@+id/buttonInfo"
@@ -195,20 +218,32 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:text="@string/dotransactionpay" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp" >
 
                 <Button
-                    android:id="@+id/buttonConnect"
+                    android:id="@+id/buttonInfoMvta"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="Connect" />
+                    android:text="@string/infoButtonText" />
 
                 <Button
-                    android:id="@+id/buttonDisconnect"
+                    android:id="@+id/buttonTransactionHandshakeMvta"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="Disconnect" />
+                    android:text="@string/dotransactionhandshake" />
+
+                <Button
+                    android:id="@+id/buttonRechargingTransactionMvta"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="@string/doRecharging" />
             </LinearLayout>
 
             <TextView

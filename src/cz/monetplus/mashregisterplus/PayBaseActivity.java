@@ -25,10 +25,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
-import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
 import cz.monetplus.blueterm.TransactionOut;
+import cz.monetplus.blueterm.worker.MonetBTAPI;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
 /**
@@ -48,6 +48,8 @@ public class PayBaseActivity extends Activity {
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
 	private EditText mInvoiceIdEditText;
+	private EditText mTranIdEditText;
+	
 	private TextView mAnswerTextView;
 
 	private String currentCurrency;
@@ -92,6 +94,7 @@ public class PayBaseActivity extends Activity {
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
+		mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
 
 		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
 
@@ -125,7 +128,29 @@ public class PayBaseActivity extends Activity {
 					}
 				});
 
-		Button infoButton = (Button) findViewById(R.id.buttonInfo);
+		mbcaButtons();
+		mvtaButtons();
+		serviceButtons();
+
+		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
+		buttonSelect.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launch the DeviceListActivity to see devices and do scan
+				Intent serverIntent = new Intent(getApplicationContext(),
+						DeviceListActivity.class);
+				startActivityForResult(serverIntent,
+						REQUEST_CONNECT_DEVICE_INSECURE);
+
+			}
+		});
+
+		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+	}
+
+	private void mvtaButtons() {
+		Button infoButton = (Button) findViewById(R.id.buttonInfoMvta);
 		infoButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -136,7 +161,7 @@ public class PayBaseActivity extends Activity {
 					// TransactionIn transIn = new TransactionInVx600();
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.INFO);
+					transIn.setCommand(TransactionCommand.MVTA_INFO);
 
 					if (transactionTask != null) {
 						transactionTask.cancel(true);
@@ -153,8 +178,8 @@ public class PayBaseActivity extends Activity {
 			}
 		});
 
-		Button payButton2 = (Button) findViewById(R.id.buttonPayTransaction);
-		payButton2.setOnClickListener(new OnClickListener() {
+		Button rechargingButton2 = (Button) findViewById(R.id.buttonRechargingTransactionMvta);
+		rechargingButton2.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -163,11 +188,12 @@ public class PayBaseActivity extends Activity {
 					mAnswerTextView.setText("Calling pay...");
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.PAY);
-					transIn.setAmount(Integer.valueOf((int) (Double
+					transIn.setCommand(TransactionCommand.MVTA_RECHARGE);
+					transIn.setAmount(Long.valueOf((long) (Double
 							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 					transIn.setCurrency(Integer.valueOf(currentCurrency));
 					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
+					transIn.setTranId(Long.valueOf(mTranIdEditText.getText().toString()));
 
 					if (transactionTask != null) {
 						transactionTask.cancel(true);
@@ -184,7 +210,7 @@ public class PayBaseActivity extends Activity {
 			}
 		});
 
-		Button buttonTranHand = (Button) findViewById(R.id.buttonTransactionHandshake);
+		Button buttonTranHand = (Button) findViewById(R.id.buttonTransactionHandshakeMvta);
 		buttonTranHand.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -194,7 +220,7 @@ public class PayBaseActivity extends Activity {
 					mAnswerTextView.setText("Calling handshake...");
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.HANDSHAKE);
+					transIn.setCommand(TransactionCommand.MVTA_HANDSHAKE);
 
 					if (transactionTask != null) {
 						transactionTask.cancel(true);
@@ -210,7 +236,9 @@ public class PayBaseActivity extends Activity {
 				}
 			}
 		});
+	}
 
+	private void serviceButtons() {
 		Button connectButton = (Button) findViewById(R.id.buttonConnect);
 		connectButton.setOnClickListener(new OnClickListener() {
 
@@ -221,7 +249,7 @@ public class PayBaseActivity extends Activity {
 					mAnswerTextView.setText("Calling connecting...");
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.ONLYCONNECT);
+					transIn.setCommand(TransactionCommand.ONLY_CONNECT);
 
 					transactionTask = new DoTransactionTask();
 					transactionTask.execute(transIn);
@@ -254,22 +282,94 @@ public class PayBaseActivity extends Activity {
 				}
 			}
 		});
+	}
 
-		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
-		buttonSelect.setOnClickListener(new OnClickListener() {
+	private void mbcaButtons() {
+		Button infoButton = (Button) findViewById(R.id.buttonInfo);
+		infoButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// Launch the DeviceListActivity to see devices and do scan
-				Intent serverIntent = new Intent(getApplicationContext(),
-						DeviceListActivity.class);
-				startActivityForResult(serverIntent,
-						REQUEST_CONNECT_DEVICE_INSECURE);
+				try {
+					// ShowTransactionOut(new TransactionOut());
+					mAnswerTextView.setText("Calling info...");
+					// TransactionIn transIn = new TransactionInVx600();
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					transIn.setCommand(TransactionCommand.MBCA_INFO);
 
+					if (transactionTask != null) {
+						transactionTask.cancel(true);
+						transactionTask = null;
+					}
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
+
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 
-		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+		Button payButton2 = (Button) findViewById(R.id.buttonPayTransaction);
+		payButton2.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				try {
+					// ShowTransactionOut(new TransactionOut());
+					mAnswerTextView.setText("Calling pay...");
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					transIn.setCommand(TransactionCommand.MBCA_PAY);
+					transIn.setAmount(Long.valueOf((long) (Double
+							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+					transIn.setCurrency(Integer.valueOf(currentCurrency));
+					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
+
+					if (transactionTask != null) {
+						transactionTask.cancel(true);
+						transactionTask = null;
+					}
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
+
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		Button buttonTranHand = (Button) findViewById(R.id.buttonTransactionHandshake);
+		buttonTranHand.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				try {
+					// ShowTransactionOut(new TransactionOu));
+					mAnswerTextView.setText("Calling handshake...");
+					TransactionIn transIn = new TransactionIn();
+					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+					transIn.setCommand(TransactionCommand.MBCA_HANDSHAKE);
+
+					if (transactionTask != null) {
+						transactionTask.cancel(true);
+						transactionTask = null;
+					}
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
+
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
 	}
 
 	@Override
