@@ -1,9 +1,5 @@
 package cz.monetplus.mashregisterplus;
 
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

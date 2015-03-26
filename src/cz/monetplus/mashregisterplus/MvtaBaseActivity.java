@@ -9,21 +9,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -239,10 +234,6 @@ public class MvtaBaseActivity extends AdActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void ShowMessage(String message) {
-
-	}
-
 	private void ShowTransactionOut(TransactionOut out) {
 		final StringBuilder resultString = new StringBuilder();
 		if (out != null) {
@@ -327,23 +318,14 @@ public class MvtaBaseActivity extends AdActivity {
 	}
 
 	private void setButtons(boolean enabled) {
-		Button button = (Button) findViewById(R.id.buttonInfo);
-		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonTransactionHandshake);
-		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonPayTransaction);
-		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonInfoMvta);
+		Button button = (Button) findViewById(R.id.buttonInfoMvta);
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonTransactionHandshakeMvta);
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonRechargingTransactionMvta);
 		button.setEnabled(enabled);
 	
-		button = (Button) findViewById(R.id.buttonConnect);
-		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonDisconnect);
-		button.setEnabled(enabled);
+
 	}
 
 	class DoTransactionTask extends

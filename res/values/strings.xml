@@ -23,5 +23,11 @@
     <string name="infoButtonText">Terminal info</string>
     <string name="doRecharging">EMV dobití</string>
     <string name="text_invoice_tranid">Inv/Tran:</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="host">Host</string>
+    <string name="mbca">MBCA</string>
+    <string name="mvta">MVTA</string>
+    <string name="servis">Servis</string>
 
 </resources>

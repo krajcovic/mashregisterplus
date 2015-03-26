@@ -15,15 +15,11 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -48,7 +44,7 @@ public class MbcaBaseActivity extends AdActivity {
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
 	private EditText mInvoiceIdEditText;
-	private EditText mTranIdEditText;
+	//private EditText mTranIdEditText;
 
 	private TextView mAnswerTextView;
 
@@ -79,7 +75,7 @@ public class MbcaBaseActivity extends AdActivity {
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
-		mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
+		//mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
 
 		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
 
@@ -243,10 +239,6 @@ public class MbcaBaseActivity extends AdActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void ShowMessage(String message) {
-
 	}
 
 	private void ShowTransactionOut(TransactionOut out) {

@@ -76,7 +76,7 @@
                     android:text="@string/select_device" />
             </LinearLayout>
 
-            <LinearLayout
+<!--             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:visibility="invisible" >
@@ -86,10 +86,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Host"
+                    android:text="@string/host"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <EditText
+                 <EditText
                     android:id="@+id/editTextHostIP"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                     android:ems="10"
                     android:text="127.0.0.1" />
 
-                <EditText
+                 <EditText
                     android:id="@+id/editTextHostPort"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                     android:ems="10"
                     android:inputType="numberDecimal"
                     android:text="80" />
-            </LinearLayout>
+            </LinearLayout> -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -175,13 +175,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp" >
+                android:layout_height="50dp"
+                style="?android:attr/buttonBarButtonStyle" >
 
                 <Button
                     android:id="@+id/buttonInfo"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/infoButtonText" />
 
                 <Button
@@ -189,6 +191,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/dotransactionhandshake" />
 
                 <Button
@@ -196,6 +199,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/dotransactionpay" />
             </LinearLayout>
 

@@ -9,21 +9,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -42,10 +32,6 @@ public class ServisActivity extends AdActivity {
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE_INSECURE = 33334;
-
-	// private final ReentrantLock lock = new ReentrantLock();
-
-	private Spinner mCurrencySpinner;
 
 	private TextView mAnswerTextView;
 	private TextView blueHwAddress;
@@ -155,10 +141,6 @@ public class ServisActivity extends AdActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void ShowMessage(String message) {
-
 	}
 
 	private void ShowTransactionOut(TransactionOut out) {

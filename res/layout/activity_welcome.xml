@@ -32,21 +32,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="64dp"
-                android:text="MBCA" />
+                android:text="@string/mbca" />
 
             <Button
                 android:id="@+id/buttonMvta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="64dp"
-                android:text="MVTA" />
+                android:text="@string/mvta" />
 
             <Button
                 android:id="@+id/buttonServis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="64dp"
-                android:text="Servis" />
+                android:text="@string/servis" />
         </LinearLayout>
     </ScrollView>
 
