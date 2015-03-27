@@ -109,7 +109,6 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_height="50dp" >
 
                 <Button
@@ -117,7 +116,6 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/connect" />
 
                 <Button
@@ -125,7 +123,6 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/disconnect" />
             </LinearLayout>
 

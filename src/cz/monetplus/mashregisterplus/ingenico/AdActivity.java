@@ -1,9 +1,10 @@
-package cz.monetplus.mashregisterplus;
+package cz.monetplus.mashregisterplus.ingenico;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
+import cz.monetplus.mashregisterplus.ingenico.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;

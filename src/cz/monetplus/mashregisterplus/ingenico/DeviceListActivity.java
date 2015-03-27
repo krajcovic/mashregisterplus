@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package cz.monetplus.mashregisterplus;
+package cz.monetplus.mashregisterplus.ingenico;
 
 import java.util.Set;
 
+import cz.monetplus.mashregisterplus.ingenico.R;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

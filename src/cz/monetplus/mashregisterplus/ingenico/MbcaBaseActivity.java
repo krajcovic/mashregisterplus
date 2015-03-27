@@ -1,4 +1,4 @@
-package cz.monetplus.mashregisterplus;
+package cz.monetplus.mashregisterplus.ingenico;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,6 +25,7 @@ import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
 import cz.monetplus.blueterm.TransactionOut;
 import cz.monetplus.blueterm.worker.MonetBTAPI;
+import cz.monetplus.mashregisterplus.ingenico.R;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
 /**

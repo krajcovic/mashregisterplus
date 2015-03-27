@@ -1,4 +1,4 @@
-package cz.monetplus.mashregisterplus;
+package cz.monetplus.mashregisterplus.ingenico;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

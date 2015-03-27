@@ -1,4 +1,4 @@
-package cz.monetplus.mashregisterplus;
+package cz.monetplus.mashregisterplus.ingenico;
 
 
 /**

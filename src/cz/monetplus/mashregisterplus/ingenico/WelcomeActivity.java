@@ -1,5 +1,6 @@
-package cz.monetplus.mashregisterplus;
+package cz.monetplus.mashregisterplus.ingenico;
 
+import cz.monetplus.mashregisterplus.ingenico.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

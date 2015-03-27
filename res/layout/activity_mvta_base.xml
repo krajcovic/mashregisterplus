@@ -176,15 +176,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                style="?android:attr/buttonBarButtonStyle" >
+                android:layout_height="50dp">
 
                 <Button
                     android:id="@+id/buttonInfoMvta"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/infoButtonText" />
 
                 <Button
@@ -192,7 +190,6 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/dotransactionhandshake" />
 
                 <Button
@@ -200,7 +197,6 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    style="?android:attr/buttonBarButtonStyle"
                     android:text="@string/doRecharging" />
             </LinearLayout>
 
