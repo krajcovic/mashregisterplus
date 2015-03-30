@@ -23,6 +23,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
 import cz.monetplus.blueterm.TransactionOut;
+import cz.monetplus.blueterm.vprotocol.RechargingType;
 import cz.monetplus.blueterm.worker.MonetBTAPI;
 import cz.monetplus.mashregisterplus.ingenico.R;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
@@ -43,12 +44,14 @@ public class MvtaBaseActivity extends AdActivity {
 
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
+	private Spinner mRechargeTypeSpinner;
 	private EditText mInvoiceIdEditText;
 	private EditText mTranIdEditText;
 	
 	private TextView mAnswerTextView;
 
 	private String currentCurrency;
+	private RechargingType rechargingType;
 	private TextView blueHwAddress;
 
 	DoTransactionTask transactionTask = null;
@@ -67,6 +70,7 @@ public class MvtaBaseActivity extends AdActivity {
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
+		mRechargeTypeSpinner = (Spinner) findViewById(R.id.spinnerRechargeType);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
 		mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
 
@@ -93,6 +97,30 @@ public class MvtaBaseActivity extends AdActivity {
 						// TODO Auto-generated method stub
 						currentCurrency = parent.getItemAtPosition(pos)
 								.toString();
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+		
+		adapter = ArrayAdapter.createFromResource(
+				this, R.array.recharge_type_array,
+				android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		mRechargeTypeSpinner.setAdapter(adapter);
+		mRechargeTypeSpinner
+				.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+					@Override
+					public void onItemSelected(AdapterView<?> parent,
+							View arg1, int pos, long arg3) {
+						String string = parent.getItemAtPosition(pos).toString();
+						rechargingType = RechargingType.valueOf(string);
 					}
 
 					@Override
@@ -157,7 +185,7 @@ public class MvtaBaseActivity extends AdActivity {
 			public void onClick(View v) {
 				try {
 					// ShowTransactionOut(new TransactionOut());
-					mAnswerTextView.setText("Calling pay...");
+					mAnswerTextView.setText("Calling recharging...");
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
 					transIn.setCommand(TransactionCommand.MVTA_RECHARGE);
@@ -166,6 +194,7 @@ public class MvtaBaseActivity extends AdActivity {
 					transIn.setCurrency(Integer.valueOf(currentCurrency));
 					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
 					transIn.setTranId(Long.valueOf(mTranIdEditText.getText().toString()));
+					transIn.setRechargingType(rechargingType);
 
 					if (transactionTask != null) {
 						transactionTask.cancel(true);

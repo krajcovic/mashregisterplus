@@ -116,7 +116,7 @@
                     android:id="@+id/textPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:minWidth="150dp"
                     android:text="@string/textPrice"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -131,10 +131,16 @@
                     android:text="@string/defaultPriceValue" />
 
                 <Spinner
+                    android:id="@+id/spinnerRechargeType"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <Spinner
                     android:id="@+id/spinnerCurrency"
                     android:layout_width="0dp"
-                    android:layout_height="41dp"
-                    android:layout_weight="1" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
             </LinearLayout>
 
             <LinearLayout
