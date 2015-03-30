@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import cz.monetplus.blueterm.Balancing;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
 import cz.monetplus.blueterm.TransactionOut;
@@ -215,6 +216,35 @@ public class MbcaBaseActivity extends AdActivity {
 				}
 			}
 		});
+		
+		Button buttonTranBalance = (Button) findViewById(R.id.buttonTransactionBalancing);
+		buttonTranBalance.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    // ShowTransactionOut(new TransactionOu));
+                    mAnswerTextView.setText("Calling balancing...");
+                    TransactionIn transIn = new TransactionIn();
+                    transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+                    Balancing balancing = new Balancing(1, 2, 1, 200, 2, 400);
+                    transIn.setBalancing(balancing);
+                    transIn.setCommand(TransactionCommand.MBCA_BALANCING);
+
+                    if (transactionTask != null) {
+                        transactionTask.cancel(true);
+                        transactionTask = null;
+                    }
+
+                    transactionTask = new DoTransactionTask();
+                    transactionTask.execute(transIn);
+
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 	}
 
 	@Override
@@ -330,6 +360,8 @@ public class MbcaBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonTransactionHandshake);
 		button.setEnabled(enabled);
+	      button = (Button) findViewById(R.id.buttonTransactionBalancing);
+	        button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonPayTransaction);
 		button.setEnabled(enabled);
 	}

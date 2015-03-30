@@ -18,6 +18,7 @@
     <string name="text_invoice_default_value">1234567890</string>
     <string name="text_tranid_default_value">1234567890</string>
     <string name="dotransactionhandshake">Handshake</string>
+    <string name="dotransactionbalancing">Balancing</string>
     <string name="dotransactionpay">Pay</string>
     <string name="terminal_result">Result from terminal</string>
     <string name="infoButtonText">Terminal info</string>
