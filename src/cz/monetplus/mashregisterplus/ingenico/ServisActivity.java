@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +75,23 @@ public class ServisActivity extends AdActivity {
 	}
 
 	private void serviceButtons() {
+		Button pinButton = (Button) findViewById(R.id.buttonGetPin);
+		pinButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				try {			
+					EditText ettn = (EditText) findViewById(R.id.editTextTerminalName);
+					Toast.makeText(getApplicationContext(), MonetBTAPI.getPin(ettn.getText().toString()), Toast.LENGTH_LONG).show();
+
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
+
+			}
+		});
+		
 		Button connectButton = (Button) findViewById(R.id.buttonConnect);
 		connectButton.setOnClickListener(new OnClickListener() {
 
