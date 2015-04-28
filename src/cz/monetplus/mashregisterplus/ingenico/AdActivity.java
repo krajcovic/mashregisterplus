@@ -28,23 +28,23 @@ public class AdActivity extends Activity {
 		getActionBar().show();
 		
 		// Create an ad.
-		adView = new AdView(this);
-		adView.setAdSize(AdSize.BANNER);
-		adView.setAdUnitId(AD_UNIT_ID);
+//		adView = new AdView(this);
+//		adView.setAdSize(AdSize.BANNER);
+//		adView.setAdUnitId(AD_UNIT_ID);
 		
 		// Add the AdView to the view hierarchy. The view will have no size
 		// until the ad is loaded.
-		LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayoutAds);
-		layout.addView(adView);
+//		LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayoutAds);
+//		layout.addView(adView);
 
 		// Create an ad request. Check logcat output for the hashed device ID to
 		// get test ads on a physical device.
-		AdRequest adRequest = new AdRequest.Builder()
-				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-				.addTestDevice("AAA780CD3E74B3969124CE8589CC2C28").build();
+//		AdRequest adRequest = new AdRequest.Builder()
+//				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//				.addTestDevice("AAA780CD3E74B3969124CE8589CC2C28").build();
 
 		// Start loading the ad in the background.
-		adView.loadAd(adRequest);
+//		adView.loadAd(adRequest);
 		
 	}
 	
