@@ -32,5 +32,7 @@
     <string name="servis">Servis</string>
     <string name="smartShop">Smart Shop</string>
     <string name="smartshopParametersCall">Parameters</string>
+    <string name="doreturn">Návrat</string>
+    <string name="docardstate">Stav karty</string>
 
 </resources>

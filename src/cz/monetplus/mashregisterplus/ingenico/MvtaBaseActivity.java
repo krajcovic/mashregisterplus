@@ -45,7 +45,7 @@ public class MvtaBaseActivity extends AdActivity {
 	private Spinner mRechargeTypeSpinner;
 	private EditText mInvoiceIdEditText;
 	private EditText mTranIdEditText;
-	
+
 	private TextView mAnswerTextView;
 
 	private String currentCurrency;
@@ -61,9 +61,9 @@ public class MvtaBaseActivity extends AdActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_mvta_base);
-		
+
 		super.adAddView();
-	
+
 		setButtons(false);
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
@@ -103,9 +103,9 @@ public class MvtaBaseActivity extends AdActivity {
 
 					}
 				});
-		
-		adapter = ArrayAdapter.createFromResource(
-				this, R.array.recharge_type_array,
+
+		adapter = ArrayAdapter.createFromResource(this,
+				R.array.recharge_type_array,
 				android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -117,7 +117,8 @@ public class MvtaBaseActivity extends AdActivity {
 					@Override
 					public void onItemSelected(AdapterView<?> parent,
 							View arg1, int pos, long arg3) {
-						String string = parent.getItemAtPosition(pos).toString();
+						String string = parent.getItemAtPosition(pos)
+								.toString();
 						rechargingType = RechargingType.valueOf(string);
 					}
 
@@ -128,10 +129,42 @@ public class MvtaBaseActivity extends AdActivity {
 					}
 				});
 
-		mvtaButtons();
+		setupButtons();
+		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+	}
 
-		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
-		buttonSelect.setOnClickListener(new OnClickListener() {
+	private void doTransaction(TransactionCommand command) {
+		try {
+			mAnswerTextView.setText("Calling " + command);
+			TransactionIn transIn = new TransactionIn();
+			transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+			transIn.setCommand(command);
+			transIn.setAmount(Long.valueOf((long) (Double
+					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+			transIn.setCurrency(Integer.valueOf(currentCurrency));
+			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
+			transIn.setTranId(Long
+					.valueOf(mTranIdEditText.getText().toString()));
+			transIn.setRechargingType(rechargingType);
+
+			if (transactionTask != null) {
+				transactionTask.cancel(true);
+				transactionTask = null;
+			}
+
+			transactionTask = new DoTransactionTask();
+			transactionTask.execute(transIn);
+
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), e.getMessage(),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private void setupButtons() {
+
+		Button temp = (Button) findViewById(R.id.buttonHwSelect);
+		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -144,12 +177,8 @@ public class MvtaBaseActivity extends AdActivity {
 			}
 		});
 
-		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
-	}
-
-	private void mvtaButtons() {
-		Button infoButton = (Button) findViewById(R.id.buttonInfoMvta);
-		infoButton.setOnClickListener(new OnClickListener() {
+		temp = (Button) findViewById(R.id.buttonInfoMvta);
+		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -176,41 +205,18 @@ public class MvtaBaseActivity extends AdActivity {
 			}
 		});
 
-		Button rechargingButton2 = (Button) findViewById(R.id.buttonRechargingTransactionMvta);
-		rechargingButton2.setOnClickListener(new OnClickListener() {
+		temp = (Button) findViewById(R.id.buttonRechargingTransactionMvta);
+		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				try {
-					// ShowTransactionOut(new TransactionOut());
-					mAnswerTextView.setText("Calling recharging...");
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MVTA_RECHARGE);
-					transIn.setAmount(Long.valueOf((long) (Double
-							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
-					transIn.setCurrency(Integer.valueOf(currentCurrency));
-					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
-					transIn.setTranId(Long.valueOf(mTranIdEditText.getText().toString()));
-					transIn.setRechargingType(rechargingType);
-
-					if (transactionTask != null) {
-						transactionTask.cancel(true);
-						transactionTask = null;
-					}
-
-					transactionTask = new DoTransactionTask();
-					transactionTask.execute(transIn);
-
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
-				}
+				doTransaction(TransactionCommand.MVTA_RECHARGE);
 			}
+
 		});
 
-		Button buttonTranHand = (Button) findViewById(R.id.buttonTransactionHandshakeMvta);
-		buttonTranHand.setOnClickListener(new OnClickListener() {
+		temp = (Button) findViewById(R.id.buttonTransactionHandshakeMvta);
+		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -263,24 +269,12 @@ public class MvtaBaseActivity extends AdActivity {
 	}
 
 	private void ShowTransactionOut(TransactionOut out) {
-		final StringBuilder resultString = new StringBuilder();
-		if (out != null) {
-			resultString.append("ResultCode:" + out.getResultCode() + "\n");
-			resultString.append("Message:" + out.getMessage() + "\n");
-
-			resultString.append("AuthCode:" + out.getAuthCode() + "\n");
-			resultString.append("SeqId:" + out.getSeqId() + "\n");
-			resultString.append("CardNumber:" + out.getCardNumber() + "\n");
-			resultString.append("CardType:" + out.getCardType() + "\n");
-		} else {
-			resultString.append("NULL returned!!!");
-		}
+		final String result = out.toString();
 
 		MvtaBaseActivity.this.runOnUiThread(new Runnable() {
-
 			@Override
 			public void run() {
-				mAnswerTextView.setText(resultString.toString());
+				mAnswerTextView.setText(result);
 
 			}
 		});
@@ -297,48 +291,18 @@ public class MvtaBaseActivity extends AdActivity {
 					blueHwAddress
 							.setText(data
 									.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
-					
-					if(blueHwAddress.getText().length() > 0) {
+
+					if (blueHwAddress.getText().length() > 0) {
 						setButtons(true);
-						
+
 					}
 				}
 			}
 			break;
 		case ACTIVITY_INTENT_ID:
 			if (resultCode == Activity.RESULT_OK) {
-				StringBuilder out = new StringBuilder();
 				if (data != null) {
-					if (data.hasExtra("ResultCode")) {
-						out.append("ResultCode:"
-								+ data.getStringExtra("ResultCode") + "\n");
-					}
-					if (data.hasExtra("ServerMessage")) {
-						out.append("ServerMessage:"
-								+ data.getStringExtra("ServerMessage") + "\n");
-					}
-
-					if (data.hasExtra("AuthCode")) {
-						out.append("AuthCode:"
-								+ data.getStringExtra("AuthCode") + "\n");
-					}
-
-					if (data.hasExtra("SeqId")) {
-						out.append("SeqId:" + data.getStringExtra("SeqId")
-								+ "\n");
-					}
-
-					if (data.hasExtra("CardNumber")) {
-						out.append("CardNumber:"
-								+ data.getStringExtra("CardNumber") + "\n");
-					}
-
-					if (data.hasExtra("CardType")) {
-						out.append("CardType:"
-								+ data.getStringExtra("CardType") + "\n");
-					}
-
-					mAnswerTextView.setText(out.toString());
+					mAnswerTextView.setText(data.toString());
 				}
 			}
 			break;
@@ -352,7 +316,6 @@ public class MvtaBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonRechargingTransactionMvta);
 		button.setEnabled(enabled);
-	
 
 	}
 
@@ -404,14 +367,15 @@ public class MvtaBaseActivity extends AdActivity {
 	protected void onStart() {
 		super.onStart();
 
-//		EasyTracker.getInstance(this).activityStart(this); // Add this method.
+		// EasyTracker.getInstance(this).activityStart(this); // Add this
+		// method.
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 
-//		EasyTracker.getInstance(this).activityStop(this); // Add this method.
+		// EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	@Override

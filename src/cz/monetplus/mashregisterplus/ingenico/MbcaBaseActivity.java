@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cz.monetplus.blueterm.Balancing;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
@@ -44,7 +43,7 @@ public class MbcaBaseActivity extends AdActivity {
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
 	private EditText mInvoiceIdEditText;
-	//private EditText mTranIdEditText;
+	// private EditText mTranIdEditText;
 
 	private TextView mAnswerTextView;
 
@@ -66,7 +65,7 @@ public class MbcaBaseActivity extends AdActivity {
 		super.onCreate(savedInstanceState);
 
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
-		setContentView(R.layout.activity_smartshop_base);
+		setContentView(R.layout.activity_mbca_base);
 		getActionBar().show();
 
 		super.adAddView();
@@ -75,7 +74,7 @@ public class MbcaBaseActivity extends AdActivity {
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
-		//mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
+		// mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
 
 		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
 
@@ -109,7 +108,39 @@ public class MbcaBaseActivity extends AdActivity {
 					}
 				});
 
-		mbcaButtons();
+		setupButtons();
+		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+	}
+
+	/**
+	 * @param command
+	 */
+	private void doTransaction(TransactionCommand command) {
+		try {
+			mAnswerTextView.setText("Calling " + command);
+			TransactionIn transIn = new TransactionIn();
+			transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+			transIn.setCommand(command);
+			transIn.setAmount(Long.valueOf((long) (Double
+					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+			transIn.setCurrency(Integer.valueOf(currentCurrency));
+			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
+
+			if (transactionTask != null) {
+				transactionTask.cancel(true);
+				transactionTask = null;
+			}
+
+			transactionTask = new DoTransactionTask();
+			transactionTask.execute(transIn);
+
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), e.getMessage(),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private void setupButtons() {
 
 		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
 		buttonSelect.setOnClickListener(new OnClickListener() {
@@ -125,124 +156,42 @@ public class MbcaBaseActivity extends AdActivity {
 			}
 		});
 
-		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
-	}
-
-	private void mbcaButtons() {
-		Button infoButton = (Button) findViewById(R.id.buttonInfo);
-		infoButton.setOnClickListener(new OnClickListener() {
+		Button temp = (Button) findViewById(R.id.buttonInfo);
+		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				try {
-					// ShowTransactionOut(new TransactionOut());
-					mAnswerTextView.setText("Calling info...");
-					// TransactionIn transIn = new TransactionInVx600();
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MBCA_INFO);
-
-					if (transactionTask != null) {
-						transactionTask.cancel(true);
-						transactionTask = null;
-					}
-
-					transactionTask = new DoTransactionTask();
-					transactionTask.execute(transIn);
-
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
-				}
+				doTransaction(TransactionCommand.MBCA_INFO);
 			}
 		});
 
-		Button payButton2 = (Button) findViewById(R.id.buttonPayTransaction);
-		payButton2.setOnClickListener(new OnClickListener() {
+		temp = (Button) findViewById(R.id.buttonPayTransaction);
+		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				try {
-					// ShowTransactionOut(new TransactionOut());
-					mAnswerTextView.setText("Calling pay...");
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MBCA_PAY);
-					transIn.setAmount(Long.valueOf((long) (Double
-							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
-					transIn.setCurrency(Integer.valueOf(currentCurrency));
-					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
-
-					if (transactionTask != null) {
-						transactionTask.cancel(true);
-						transactionTask = null;
-					}
-
-					transactionTask = new DoTransactionTask();
-					transactionTask.execute(transIn);
-
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
-				}
+				doTransaction(TransactionCommand.MBCA_PAY);
 			}
+
 		});
 
-		Button buttonTranHand = (Button) findViewById(R.id.buttonTransactionHandshake);
-		buttonTranHand.setOnClickListener(new OnClickListener() {
+		temp = (Button) findViewById(R.id.buttonTransactionHandshake);
+		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				try {
-					// ShowTransactionOut(new TransactionOu));
-					mAnswerTextView.setText("Calling handshake...");
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MBCA_HANDSHAKE);
-
-					if (transactionTask != null) {
-						transactionTask.cancel(true);
-						transactionTask = null;
-					}
-
-					transactionTask = new DoTransactionTask();
-					transactionTask.execute(transIn);
-
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
-				}
+				doTransaction(TransactionCommand.MBCA_HANDSHAKE);
 			}
 		});
-		
-		Button buttonTranBalance = (Button) findViewById(R.id.buttonParametersCall);
-		buttonTranBalance.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                try {
-                    // ShowTransactionOut(new TransactionOu));
-                    mAnswerTextView.setText("Calling balancing...");
-                    TransactionIn transIn = new TransactionIn();
-                    transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-                    Balancing balancing = new Balancing(1, 2, 1, 200, 2, 400);
-                    transIn.setBalancing(balancing);
-                    transIn.setCommand(TransactionCommand.MBCA_BALANCING);
+		temp = (Button) findViewById(R.id.buttonBalancing);
+		temp.setOnClickListener(new OnClickListener() {
 
-                    if (transactionTask != null) {
-                        transactionTask.cancel(true);
-                        transactionTask = null;
-                    }
-
-                    transactionTask = new DoTransactionTask();
-                    transactionTask.execute(transIn);
-
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(),
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				doTransaction(TransactionCommand.MBCA_BALANCING);
+			}
+		});
 	}
 
 	@Override
@@ -271,24 +220,12 @@ public class MbcaBaseActivity extends AdActivity {
 	}
 
 	private void ShowTransactionOut(TransactionOut out) {
-		final StringBuilder resultString = new StringBuilder();
-		if (out != null) {
-			resultString.append("ResultCode:" + out.getResultCode() + "\n");
-			resultString.append("Message:" + out.getMessage() + "\n");
-
-			resultString.append("AuthCode:" + out.getAuthCode() + "\n");
-			resultString.append("SeqId:" + out.getSeqId() + "\n");
-			resultString.append("CardNumber:" + out.getCardNumber() + "\n");
-			resultString.append("CardType:" + out.getCardType() + "\n");
-		} else {
-			resultString.append("NULL returned!!!");
-		}
+		final String result = out.toString();
 
 		MbcaBaseActivity.this.runOnUiThread(new Runnable() {
-
 			@Override
 			public void run() {
-				mAnswerTextView.setText(resultString.toString());
+				mAnswerTextView.setText(result);
 
 			}
 		});
@@ -315,38 +252,8 @@ public class MbcaBaseActivity extends AdActivity {
 			break;
 		case ACTIVITY_INTENT_ID:
 			if (resultCode == Activity.RESULT_OK) {
-				StringBuilder out = new StringBuilder();
 				if (data != null) {
-					if (data.hasExtra("ResultCode")) {
-						out.append("ResultCode:"
-								+ data.getStringExtra("ResultCode") + "\n");
-					}
-					if (data.hasExtra("ServerMessage")) {
-						out.append("ServerMessage:"
-								+ data.getStringExtra("ServerMessage") + "\n");
-					}
-
-					if (data.hasExtra("AuthCode")) {
-						out.append("AuthCode:"
-								+ data.getStringExtra("AuthCode") + "\n");
-					}
-
-					if (data.hasExtra("SeqId")) {
-						out.append("SeqId:" + data.getStringExtra("SeqId")
-								+ "\n");
-					}
-
-					if (data.hasExtra("CardNumber")) {
-						out.append("CardNumber:"
-								+ data.getStringExtra("CardNumber") + "\n");
-					}
-
-					if (data.hasExtra("CardType")) {
-						out.append("CardType:"
-								+ data.getStringExtra("CardType") + "\n");
-					}
-
-					mAnswerTextView.setText(out.toString());
+					mAnswerTextView.setText(data.toString());
 				}
 			}
 			break;
@@ -358,8 +265,8 @@ public class MbcaBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonTransactionHandshake);
 		button.setEnabled(enabled);
-	      button = (Button) findViewById(R.id.buttonParametersCall);
-	        button.setEnabled(enabled);
+		button = (Button) findViewById(R.id.buttonBalancing);
+		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonPayTransaction);
 		button.setEnabled(enabled);
 	}
@@ -412,14 +319,15 @@ public class MbcaBaseActivity extends AdActivity {
 	protected void onStart() {
 		super.onStart();
 
-		//EasyTracker.getInstance(this).activityStart(this); // Add this method.
+		// EasyTracker.getInstance(this).activityStart(this); // Add this
+		// method.
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 
-		//EasyTracker.getInstance(this).activityStop(this); // Add this method.
+		// EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	@Override

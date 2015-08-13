@@ -206,25 +206,25 @@
                 android:layout_height="50dp" >
 
                 <Button
-                    android:id="@+id/button01"
+                    android:id="@+id/buttonCardState"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:enabled="false" />
+                    android:text="@string/docardstate" />
 
                 <Button
-                    android:id="@+id/buttonParametersCall"
+                    android:id="@+id/buttonBalancing"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:text="@string/smartshopParametersCall" />
 
                 <Button
-                    android:id="@+id/button02"
+                    android:id="@+id/buttonReturn"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:enabled="false" />
+                    android:text="@string/doreturn" />
 
             </LinearLayout>
 

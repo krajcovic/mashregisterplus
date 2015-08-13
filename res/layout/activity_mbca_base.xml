@@ -213,7 +213,7 @@
                     android:enabled="false" />
 
                 <Button
-                    android:id="@+id/buttonParametersCall"
+                    android:id="@+id/buttonBalancing"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
