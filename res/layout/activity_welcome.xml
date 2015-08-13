@@ -42,6 +42,13 @@
                 android:text="@string/mvta" />
 
             <Button
+                android:id="@+id/buttonSmartShop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="64dp"
+                android:text="@string/smartShop" />
+
+            <Button
                 android:id="@+id/buttonServis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

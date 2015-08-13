@@ -30,5 +30,7 @@
     <string name="mbca">MBCA</string>
     <string name="mvta">MVTA</string>
     <string name="servis">Servis</string>
+    <string name="smartShop">Smart Shop</string>
+    <string name="smartshopParametersCall">Parameters</string>
 
 </resources>

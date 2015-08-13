@@ -38,6 +38,17 @@ public class WelcomeActivity extends AdActivity {
 			}
 		});
 		
+		Button buttonSmartShop = (Button) findViewById(R.id.buttonSmartShop);
+		buttonSmartShop.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getApplicationContext(),
+						SmartShopBaseActivity.class));
+
+			}
+		});
+		
 		Button buttonServis = (Button) findViewById(R.id.buttonServis);
 		buttonServis.setOnClickListener(new OnClickListener() {
 

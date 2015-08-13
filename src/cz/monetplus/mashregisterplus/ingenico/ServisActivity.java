@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -300,14 +298,14 @@ public class ServisActivity extends AdActivity {
 	protected void onStart() {
 		super.onStart();
 
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
+//		EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
+//		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	@Override

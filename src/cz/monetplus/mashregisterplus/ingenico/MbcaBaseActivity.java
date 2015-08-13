@@ -19,8 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 import cz.monetplus.blueterm.Balancing;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
@@ -68,7 +66,7 @@ public class MbcaBaseActivity extends AdActivity {
 		super.onCreate(savedInstanceState);
 
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
-		setContentView(R.layout.activity_mbca_base);
+		setContentView(R.layout.activity_smartshop_base);
 		getActionBar().show();
 
 		super.adAddView();
@@ -217,7 +215,7 @@ public class MbcaBaseActivity extends AdActivity {
 			}
 		});
 		
-		Button buttonTranBalance = (Button) findViewById(R.id.buttonTransactionBalancing);
+		Button buttonTranBalance = (Button) findViewById(R.id.buttonParametersCall);
 		buttonTranBalance.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -360,7 +358,7 @@ public class MbcaBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonTransactionHandshake);
 		button.setEnabled(enabled);
-	      button = (Button) findViewById(R.id.buttonTransactionBalancing);
+	      button = (Button) findViewById(R.id.buttonParametersCall);
 	        button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonPayTransaction);
 		button.setEnabled(enabled);
@@ -414,14 +412,14 @@ public class MbcaBaseActivity extends AdActivity {
 	protected void onStart() {
 		super.onStart();
 
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
+		//EasyTracker.getInstance(this).activityStart(this); // Add this method.
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
+		//EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	@Override

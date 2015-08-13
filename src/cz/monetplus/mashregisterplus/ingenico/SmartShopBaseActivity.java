@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -18,11 +19,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cz.monetplus.blueterm.Balancing;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
 import cz.monetplus.blueterm.TransactionOut;
-import cz.monetplus.blueterm.vprotocol.RechargingType;
 import cz.monetplus.mashregisterplus.ingenico.R;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
@@ -32,7 +33,7 @@ import cz.monetplus.mashregisterplus.util.SystemUiHider;
  * 
  * @see SystemUiHider
  */
-public class MvtaBaseActivity extends AdActivity {
+public class SmartShopBaseActivity extends AdActivity {
 	private static final int ACTIVITY_INTENT_ID = 33333;
 
 	// Intent request codes
@@ -42,35 +43,39 @@ public class MvtaBaseActivity extends AdActivity {
 
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
-	private Spinner mRechargeTypeSpinner;
 	private EditText mInvoiceIdEditText;
-	private EditText mTranIdEditText;
-	
+	//private EditText mTranIdEditText;
+
 	private TextView mAnswerTextView;
 
 	private String currentCurrency;
-	private RechargingType rechargingType;
 	private TextView blueHwAddress;
 
 	DoTransactionTask transactionTask = null;
 
 	private Menu propertiesMenu;
 
+	// private AdView adView;
+
+	// /* Your ad unit id. Replace with your actual ad unit id. */
+	// private static final String AD_UNIT_ID =
+	// "ca-app-pub-4197154738167514/1390370981";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_mvta_base);
-		
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
+		setContentView(R.layout.activity_smartshop_base);
+		getActionBar().show();
+
 		super.adAddView();
-	
 		setButtons(false);
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
-		mRechargeTypeSpinner = (Spinner) findViewById(R.id.spinnerRechargeType);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
-		mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
+		//mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
 
 		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
 
@@ -103,32 +108,8 @@ public class MvtaBaseActivity extends AdActivity {
 
 					}
 				});
-		
-		adapter = ArrayAdapter.createFromResource(
-				this, R.array.recharge_type_array,
-				android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		mRechargeTypeSpinner.setAdapter(adapter);
-		mRechargeTypeSpinner
-				.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-					@Override
-					public void onItemSelected(AdapterView<?> parent,
-							View arg1, int pos, long arg3) {
-						String string = parent.getItemAtPosition(pos).toString();
-						rechargingType = RechargingType.valueOf(string);
-					}
-
-					@Override
-					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub
-
-					}
-				});
-
-		mvtaButtons();
+		mbcaButtons();
 
 		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
 		buttonSelect.setOnClickListener(new OnClickListener() {
@@ -147,8 +128,8 @@ public class MvtaBaseActivity extends AdActivity {
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
 	}
 
-	private void mvtaButtons() {
-		Button infoButton = (Button) findViewById(R.id.buttonInfoMvta);
+	private void mbcaButtons() {
+		Button infoButton = (Button) findViewById(R.id.buttonInfo);
 		infoButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -159,7 +140,7 @@ public class MvtaBaseActivity extends AdActivity {
 					// TransactionIn transIn = new TransactionInVx600();
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MVTA_INFO);
+					transIn.setCommand(TransactionCommand.SMART_SHOP_GET_APP_INFO);
 
 					if (transactionTask != null) {
 						transactionTask.cancel(true);
@@ -176,23 +157,21 @@ public class MvtaBaseActivity extends AdActivity {
 			}
 		});
 
-		Button rechargingButton2 = (Button) findViewById(R.id.buttonRechargingTransactionMvta);
-		rechargingButton2.setOnClickListener(new OnClickListener() {
+		Button payButton2 = (Button) findViewById(R.id.buttonPayTransaction);
+		payButton2.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				try {
 					// ShowTransactionOut(new TransactionOut());
-					mAnswerTextView.setText("Calling recharging...");
+					mAnswerTextView.setText("Calling pay...");
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MVTA_RECHARGE);
+					transIn.setCommand(TransactionCommand.SMART_SHOP_GET_LAST_TRAN);
 					transIn.setAmount(Long.valueOf((long) (Double
 							.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 					transIn.setCurrency(Integer.valueOf(currentCurrency));
 					transIn.setInvoice(mInvoiceIdEditText.getText().toString());
-					transIn.setTranId(Long.valueOf(mTranIdEditText.getText().toString()));
-					transIn.setRechargingType(rechargingType);
 
 					if (transactionTask != null) {
 						transactionTask.cancel(true);
@@ -209,7 +188,7 @@ public class MvtaBaseActivity extends AdActivity {
 			}
 		});
 
-		Button buttonTranHand = (Button) findViewById(R.id.buttonTransactionHandshakeMvta);
+		Button buttonTranHand = (Button) findViewById(R.id.buttonTransactionHandshake);
 		buttonTranHand.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -219,7 +198,7 @@ public class MvtaBaseActivity extends AdActivity {
 					mAnswerTextView.setText("Calling handshake...");
 					TransactionIn transIn = new TransactionIn();
 					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MVTA_HANDSHAKE);
+					transIn.setCommand(TransactionCommand.SMART_SHOP_HANDSHAKE);
 
 					if (transactionTask != null) {
 						transactionTask.cancel(true);
@@ -235,6 +214,35 @@ public class MvtaBaseActivity extends AdActivity {
 				}
 			}
 		});
+		
+		Button buttonParametersCall = (Button) findViewById(R.id.buttonParametersCall);
+		buttonParametersCall.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    // ShowTransactionOut(new TransactionOu));
+                    mAnswerTextView.setText("Calling balancing...");
+                    TransactionIn transIn = new TransactionIn();
+                    transIn.setBlueHwAddress(blueHwAddress.getText().toString());
+//                    Balancing balancing = new Balancing(1, 2, 1, 200, 2, 400);
+//                    transIn.setBalancing(balancing);
+                    transIn.setCommand(TransactionCommand.SMART_SHOP_PARAMETRS_CALL);
+
+                    if (transactionTask != null) {
+                        transactionTask.cancel(true);
+                        transactionTask = null;
+                    }
+
+                    transactionTask = new DoTransactionTask();
+                    transactionTask.execute(transIn);
+
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 	}
 
 	@Override
@@ -276,7 +284,7 @@ public class MvtaBaseActivity extends AdActivity {
 			resultString.append("NULL returned!!!");
 		}
 
-		MvtaBaseActivity.this.runOnUiThread(new Runnable() {
+		SmartShopBaseActivity.this.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -297,10 +305,10 @@ public class MvtaBaseActivity extends AdActivity {
 					blueHwAddress
 							.setText(data
 									.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
-					
-					if(blueHwAddress.getText().length() > 0) {
+
+					if (blueHwAddress.getText().length() > 0) {
 						setButtons(true);
-						
+
 					}
 				}
 			}
@@ -346,14 +354,14 @@ public class MvtaBaseActivity extends AdActivity {
 	}
 
 	private void setButtons(boolean enabled) {
-		Button button = (Button) findViewById(R.id.buttonInfoMvta);
+		Button button = (Button) findViewById(R.id.buttonInfo);
 		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonTransactionHandshakeMvta);
+		button = (Button) findViewById(R.id.buttonTransactionHandshake);
 		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonRechargingTransactionMvta);
+	      button = (Button) findViewById(R.id.buttonParametersCall);
+	        button.setEnabled(enabled);
+		button = (Button) findViewById(R.id.buttonPayTransaction);
 		button.setEnabled(enabled);
-	
-
 	}
 
 	class DoTransactionTask extends
@@ -362,7 +370,7 @@ public class MvtaBaseActivity extends AdActivity {
 		@Override
 		protected TransactionOut doInBackground(TransactionIn... params) {
 			return MonetBTAPI.doTransaction(
-			/* getApplicationContext() */MvtaBaseActivity.this, params[0]);
+			/* getApplicationContext() */SmartShopBaseActivity.this, params[0]);
 		}
 
 		@Override
@@ -388,7 +396,7 @@ public class MvtaBaseActivity extends AdActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			MvtaBaseActivity.this.runOnUiThread(new Runnable() {
+			SmartShopBaseActivity.this.runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
