@@ -75,7 +75,7 @@ public class ServisActivity extends AdActivity {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		blueHwAddress.setText(settings.getString(BT_ADDRESS, getString(R.string.default_select_device)));
 
-		if (blueHwAddress.getText().equals(R.string.default_select_device)) {
+		if (blueHwAddress.getText().equals(getString(R.string.default_select_device))) {
 			setButtons(false);
 		}
 
