@@ -66,8 +66,6 @@ public class PosCallbackee implements PosCallbacks {
 
 	@Override
 	public Boolean isSingOk() {
-		// TODO Auto-generated method
-
 //		synchronized (isSignOk) {
 //			Runnable runnable = new Runnable() {
 //

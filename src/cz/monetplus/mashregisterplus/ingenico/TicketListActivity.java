@@ -20,7 +20,6 @@ public class TicketListActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
 		// Setup the window
@@ -28,14 +27,6 @@ public class TicketListActivity extends Activity {
 		setContentView(R.layout.ticket_list);
 
 		listView = (ListView) findViewById(R.id.ticket_list);
-
-		// Defined Array values to show in ListView
-		// String[] values = new String[] { "Android List View",
-		// "Adapter implementation", "Simple List View In Android",
-		// "Create List View Android", "Android Example",
-		// "List View Source Code", "List View Array Adapter",
-		// "Android Example List View" };
-
 		Bundle b = getIntent().getExtras();
 		List<String> values = b.getStringArrayList("ticket");
 
@@ -47,12 +38,6 @@ public class TicketListActivity extends Activity {
 						finish();
 					}
 				});
-
-		// Define a new Adapter
-		// First parameter - Context
-		// Second parameter - Layout for the row
-		// Third parameter - ID of the TextView to which the data is written
-		// Forth - the Array of data
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, android.R.id.text1, values);

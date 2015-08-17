@@ -18,7 +18,6 @@ public class AdActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR); // Add this line
 		super.onCreate(savedInstanceState);
 	}

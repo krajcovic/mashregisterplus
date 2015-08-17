@@ -94,15 +94,12 @@ public class MvtaBaseActivity extends AdActivity {
 					@Override
 					public void onItemSelected(AdapterView<?> parent,
 							View arg1, int pos, long arg3) {
-						// TODO Auto-generated method stub
 						currentCurrency = parent.getItemAtPosition(pos)
 								.toString();
 					}
 
 					@Override
 					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub
-
 					}
 				});
 
@@ -126,8 +123,6 @@ public class MvtaBaseActivity extends AdActivity {
 
 					@Override
 					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub
-
 					}
 				});
 

@@ -138,13 +138,7 @@ public class ServisActivity extends AdActivity {
 			public void onClick(View v) {
 				mAnswerTextView.setText("Calling disconnecting...");
 				try {
-					// TODO: precti si poradne dokumentaci.... ackoliv je to
-					// asynchroni task, tak se vyhybaji paralelnimu vykonavani.
-					// DoCancelTask doCancelTask = new DoCancelTask();
-					// doCancelTask.execute();
-
 					MonetBTAPI.doCancel();
-
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
 							Toast.LENGTH_LONG).show();
