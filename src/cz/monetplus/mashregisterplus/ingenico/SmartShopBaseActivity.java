@@ -118,9 +118,9 @@ public class SmartShopBaseActivity extends AdActivity {
 
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		blueHwAddress.setText(settings.getString(BT_ADDRESS, "Select device"));
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, getString(R.string.default_select_device)));
 
-		if (blueHwAddress.getText().equals("Select device")) {
+		if (blueHwAddress.getText().equals(R.string.default_select_device)) {
 			setButtons(false);
 		}
 

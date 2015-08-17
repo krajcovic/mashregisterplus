@@ -36,5 +36,6 @@
     <string name="docardstate">Stav karty</string>
     <string name="button_close">Close</string>
     <string name="title_printer">Printer</string>
+    <string name="default_select_device">Select device</string>
 
 </resources>

@@ -48,8 +48,6 @@ public class ServisActivity extends AdActivity {
 		setContentView(R.layout.activity_servis);
 
 		super.adAddView();
-		setButtons(false);
-
 		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
 
 		mAnswerTextView.setFocusableInTouchMode(true);
@@ -75,7 +73,11 @@ public class ServisActivity extends AdActivity {
 
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		blueHwAddress.setText(settings.getString(BT_ADDRESS, "Select device"));
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, getString(R.string.default_select_device)));
+
+		if (blueHwAddress.getText().equals(R.string.default_select_device)) {
+			setButtons(false);
+		}
 
 		this.posCallbackee = new PosCallbackee(ServisActivity.this,
 				getApplicationContext());

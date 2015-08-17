@@ -75,7 +75,6 @@ public class MbcaBaseActivity extends AdActivity {
 		getActionBar().show();
 
 		super.adAddView();
-		setButtons(false);
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
@@ -119,7 +118,11 @@ public class MbcaBaseActivity extends AdActivity {
 
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		blueHwAddress.setText(settings.getString(BT_ADDRESS, "Select device"));
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, getString(R.string.default_select_device)));
+
+		if (blueHwAddress.getText().equals(R.string.default_select_device)) {
+			setButtons(false);
+		}
 
 		this.posCallbackee = new PosCallbackee(MbcaBaseActivity.this,
 				getApplicationContext());
