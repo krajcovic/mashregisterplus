@@ -219,37 +219,7 @@ public class ServisActivity extends AdActivity {
 			break;
 		case ACTIVITY_INTENT_ID:
 			if (resultCode == Activity.RESULT_OK) {
-				// StringBuilder out = new StringBuilder();
 				if (data != null) {
-					// if (data.hasExtra("ResultCode")) {
-					// out.append("ResultCode:"
-					// + data.getStringExtra("ResultCode") + "\n");
-					// }
-					// if (data.hasExtra("ServerMessage")) {
-					// out.append("ServerMessage:"
-					// + data.getStringExtra("ServerMessage") + "\n");
-					// }
-					//
-					// if (data.hasExtra("AuthCode")) {
-					// out.append("AuthCode:"
-					// + data.getStringExtra("AuthCode") + "\n");
-					// }
-					//
-					// if (data.hasExtra("SeqId")) {
-					// out.append("SeqId:" + data.getStringExtra("SeqId")
-					// + "\n");
-					// }
-					//
-					// if (data.hasExtra("CardNumber")) {
-					// out.append("CardNumber:"
-					// + data.getStringExtra("CardNumber") + "\n");
-					// }
-					//
-					// if (data.hasExtra("CardType")) {
-					// out.append("CardType:"
-					// + data.getStringExtra("CardType") + "\n");
-					// }
-
 					mAnswerTextView.setText(data.toString());
 				}
 			}
