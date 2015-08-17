@@ -2,6 +2,7 @@ package cz.monetplus.mashregisterplus.ingenico;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -55,6 +55,8 @@ public class MvtaBaseActivity extends AdActivity {
 	DoTransactionTask transactionTask = null;
 
 	private Menu propertiesMenu;
+
+	private PosCallbackee posCallbackee;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -131,14 +133,20 @@ public class MvtaBaseActivity extends AdActivity {
 
 		setupButtons();
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+		
+		// Restore preferences
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, "Select device"));
+		
+		this.posCallbackee = new PosCallbackee(MvtaBaseActivity.this,
+				getApplicationContext());
 	}
 
 	private void doTransaction(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
-			TransactionIn transIn = new TransactionIn();
-			transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-			transIn.setCommand(command);
+			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
@@ -182,26 +190,7 @@ public class MvtaBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				try {
-					// ShowTransactionOut(new TransactionOut());
-					mAnswerTextView.setText("Calling info...");
-					// TransactionIn transIn = new TransactionInVx600();
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MVTA_INFO);
-
-					if (transactionTask != null) {
-						transactionTask.cancel(true);
-						transactionTask = null;
-					}
-
-					transactionTask = new DoTransactionTask();
-					transactionTask.execute(transIn);
-
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
-				}
+				doTransaction(TransactionCommand.MVTA_INFO);
 			}
 		});
 
@@ -220,25 +209,7 @@ public class MvtaBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				try {
-					// ShowTransactionOut(new TransactionOu));
-					mAnswerTextView.setText("Calling handshake...");
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.MVTA_HANDSHAKE);
-
-					if (transactionTask != null) {
-						transactionTask.cancel(true);
-						transactionTask = null;
-					}
-
-					transactionTask = new DoTransactionTask();
-					transactionTask.execute(transIn);
-
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
-				}
+				doTransaction(TransactionCommand.MVTA_HANDSHAKE);
 			}
 		});
 	}
@@ -275,7 +246,8 @@ public class MvtaBaseActivity extends AdActivity {
 			@Override
 			public void run() {
 				mAnswerTextView.setText(result);
-
+				
+				Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -374,6 +346,11 @@ public class MvtaBaseActivity extends AdActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
+		
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(BT_ADDRESS, blueHwAddress.getText().toString());
+		editor.commit();
 
 		// EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}

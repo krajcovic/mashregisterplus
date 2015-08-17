@@ -1,7 +1,12 @@
 package cz.monetplus.mashregisterplus.ingenico;
 
+import java.util.ArrayList;
+
+import javax.crypto.spec.PSource;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,7 +23,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import cz.monetplus.blueterm.Balancing;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -53,6 +57,8 @@ public class MbcaBaseActivity extends AdActivity {
 	DoTransactionTask transactionTask = null;
 
 	private Menu propertiesMenu;
+
+	private PosCallbackee posCallbackee;
 
 	// private AdView adView;
 
@@ -110,6 +116,14 @@ public class MbcaBaseActivity extends AdActivity {
 
 		setupButtons();
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+
+		// Restore preferences
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, "Select device"));
+
+		this.posCallbackee = new PosCallbackee(MbcaBaseActivity.this,
+				getApplicationContext());
+
 	}
 
 	/**
@@ -118,9 +132,8 @@ public class MbcaBaseActivity extends AdActivity {
 	private void doTransaction(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
-			TransactionIn transIn = new TransactionIn();
-			transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-			transIn.setCommand(command);
+			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
@@ -227,6 +240,20 @@ public class MbcaBaseActivity extends AdActivity {
 			public void run() {
 				mAnswerTextView.setText(result);
 
+				Toast.makeText(getApplicationContext(), result,
+						Toast.LENGTH_LONG).show();
+
+				if (!posCallbackee.getTicket().isEmpty()) {
+					Intent intent = new Intent(getApplicationContext(),
+							TicketListActivity.class);
+					Bundle b = new Bundle();
+					b.putStringArrayList("ticket",
+							(ArrayList<String>) posCallbackee.getTicket());
+					intent.putExtras(b);
+
+					startActivity(intent);
+				}
+
 			}
 		});
 	}
@@ -327,6 +354,10 @@ public class MbcaBaseActivity extends AdActivity {
 	protected void onStop() {
 		super.onStop();
 
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(BT_ADDRESS, blueHwAddress.getText().toString());
+		editor.commit();
 		// EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 

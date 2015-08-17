@@ -88,6 +88,11 @@
             android:label="@string/select_device"
             android:theme="@android:style/Theme.Dialog" />
         <activity
+            android:name=".TicketListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/select_device"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
     </application>

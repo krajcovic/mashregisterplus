@@ -2,6 +2,7 @@ package cz.monetplus.mashregisterplus.ingenico;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -40,6 +40,8 @@ public class ServisActivity extends AdActivity {
 
 	private Menu propertiesMenu;
 
+	private PosCallbackee posCallbackee;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,7 +55,7 @@ public class ServisActivity extends AdActivity {
 		mAnswerTextView.setFocusableInTouchMode(true);
 		mAnswerTextView.requestFocus();
 
-		serviceButtons();
+		setupButtons();
 
 		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
 		buttonSelect.setOnClickListener(new OnClickListener() {
@@ -70,17 +72,26 @@ public class ServisActivity extends AdActivity {
 		});
 
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+
+		// Restore preferences
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, "Select device"));
+
+		this.posCallbackee = new PosCallbackee(ServisActivity.this,
+				getApplicationContext());
 	}
 
-	private void serviceButtons() {
+	private void setupButtons() {
 		Button pinButton = (Button) findViewById(R.id.buttonGetPin);
 		pinButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				try {			
+				try {
 					EditText ettn = (EditText) findViewById(R.id.editTextTerminalName);
-					Toast.makeText(getApplicationContext(), MonetBTAPI.getPin(ettn.getText().toString()), Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(),
+							MonetBTAPI.getPin(ettn.getText().toString()),
+							Toast.LENGTH_LONG).show();
 
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
@@ -89,7 +100,7 @@ public class ServisActivity extends AdActivity {
 
 			}
 		});
-		
+
 		Button connectButton = (Button) findViewById(R.id.buttonConnect);
 		connectButton.setOnClickListener(new OnClickListener() {
 
@@ -97,10 +108,11 @@ public class ServisActivity extends AdActivity {
 			public void onClick(View v) {
 				try {
 					// ShowTransactionOut(new TransactionOu));
-					mAnswerTextView.setText("Calling connecting...");
-					TransactionIn transIn = new TransactionIn();
-					transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-					transIn.setCommand(TransactionCommand.ONLY_CONNECT);
+					mAnswerTextView.setText("Calling "
+							+ TransactionCommand.ONLY_CONNECT);
+					TransactionIn transIn = new TransactionIn(blueHwAddress
+							.getText().toString(),
+							TransactionCommand.ONLY_CONNECT, posCallbackee);
 
 					transactionTask = new DoTransactionTask();
 					transactionTask.execute(transIn);
@@ -161,25 +173,12 @@ public class ServisActivity extends AdActivity {
 	}
 
 	private void ShowTransactionOut(TransactionOut out) {
-		final StringBuilder resultString = new StringBuilder();
-		if (out != null) {
-			resultString.append("ResultCode:" + out.getResultCode() + "\n");
-			resultString.append("Message:" + out.getMessage() + "\n");
-
-			resultString.append("AuthCode:" + out.getAuthCode() + "\n");
-			resultString.append("SeqId:" + out.getSeqId() + "\n");
-			resultString.append("CardNumber:" + out.getCardNumber() + "\n");
-			resultString.append("CardType:" + out.getCardType() + "\n");
-		} else {
-			resultString.append("NULL returned!!!");
-		}
-
+		final String result = out.toString();
 		ServisActivity.this.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				mAnswerTextView.setText(resultString.toString());
-
+				mAnswerTextView.setText(result);
 			}
 		});
 	}
@@ -205,38 +204,38 @@ public class ServisActivity extends AdActivity {
 			break;
 		case ACTIVITY_INTENT_ID:
 			if (resultCode == Activity.RESULT_OK) {
-				StringBuilder out = new StringBuilder();
+				// StringBuilder out = new StringBuilder();
 				if (data != null) {
-					if (data.hasExtra("ResultCode")) {
-						out.append("ResultCode:"
-								+ data.getStringExtra("ResultCode") + "\n");
-					}
-					if (data.hasExtra("ServerMessage")) {
-						out.append("ServerMessage:"
-								+ data.getStringExtra("ServerMessage") + "\n");
-					}
+					// if (data.hasExtra("ResultCode")) {
+					// out.append("ResultCode:"
+					// + data.getStringExtra("ResultCode") + "\n");
+					// }
+					// if (data.hasExtra("ServerMessage")) {
+					// out.append("ServerMessage:"
+					// + data.getStringExtra("ServerMessage") + "\n");
+					// }
+					//
+					// if (data.hasExtra("AuthCode")) {
+					// out.append("AuthCode:"
+					// + data.getStringExtra("AuthCode") + "\n");
+					// }
+					//
+					// if (data.hasExtra("SeqId")) {
+					// out.append("SeqId:" + data.getStringExtra("SeqId")
+					// + "\n");
+					// }
+					//
+					// if (data.hasExtra("CardNumber")) {
+					// out.append("CardNumber:"
+					// + data.getStringExtra("CardNumber") + "\n");
+					// }
+					//
+					// if (data.hasExtra("CardType")) {
+					// out.append("CardType:"
+					// + data.getStringExtra("CardType") + "\n");
+					// }
 
-					if (data.hasExtra("AuthCode")) {
-						out.append("AuthCode:"
-								+ data.getStringExtra("AuthCode") + "\n");
-					}
-
-					if (data.hasExtra("SeqId")) {
-						out.append("SeqId:" + data.getStringExtra("SeqId")
-								+ "\n");
-					}
-
-					if (data.hasExtra("CardNumber")) {
-						out.append("CardNumber:"
-								+ data.getStringExtra("CardNumber") + "\n");
-					}
-
-					if (data.hasExtra("CardType")) {
-						out.append("CardType:"
-								+ data.getStringExtra("CardType") + "\n");
-					}
-
-					mAnswerTextView.setText(out.toString());
+					mAnswerTextView.setText(data.toString());
 				}
 			}
 			break;
@@ -298,14 +297,20 @@ public class ServisActivity extends AdActivity {
 	protected void onStart() {
 		super.onStart();
 
-//		EasyTracker.getInstance(this).activityStart(this); // Add this method.
+		// EasyTracker.getInstance(this).activityStart(this); // Add this
+		// method.
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 
-//		EasyTracker.getInstance(this).activityStop(this); // Add this method.
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(BT_ADDRESS, blueHwAddress.getText().toString());
+
+		editor.commit();
+		// EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	@Override

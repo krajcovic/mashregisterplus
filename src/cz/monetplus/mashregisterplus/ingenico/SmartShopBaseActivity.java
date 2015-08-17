@@ -1,7 +1,10 @@
 package cz.monetplus.mashregisterplus.ingenico;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,9 +21,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cz.monetplus.blueterm.Balancing;
 import cz.monetplus.blueterm.MonetBTAPI;
+import cz.monetplus.blueterm.PosCallbacks;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
 import cz.monetplus.blueterm.TransactionOut;
@@ -55,6 +58,8 @@ public class SmartShopBaseActivity extends AdActivity {
 
 	private Menu propertiesMenu;
 
+	private PosCallbackee posCallbackee;
+
 	// private AdView adView;
 
 	// /* Your ad unit id. Replace with your actual ad unit id. */
@@ -70,7 +75,6 @@ public class SmartShopBaseActivity extends AdActivity {
 		getActionBar().show();
 
 		super.adAddView();
-		setButtons(false);
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
@@ -109,17 +113,27 @@ public class SmartShopBaseActivity extends AdActivity {
 					}
 				});
 
+		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
 		setupButtons();
 
-		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
+		// Restore preferences
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, "Select device"));
+
+		if (blueHwAddress.getText().equals("Select device")) {
+			setButtons(false);
+		}
+
+		this.posCallbackee = new PosCallbackee(SmartShopBaseActivity.this,
+				getApplicationContext());
 	}
 
 	private void doTransacation(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
-			TransactionIn transIn = new TransactionIn();
-			transIn.setBlueHwAddress(blueHwAddress.getText().toString());
-			transIn.setCommand(command);
+			posCallbackee.getTicket().clear();
+			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
@@ -140,7 +154,7 @@ public class SmartShopBaseActivity extends AdActivity {
 	}
 
 	private void setupButtons() {
-		
+
 		Button buttonSelect = (Button) findViewById(R.id.buttonHwSelect);
 		buttonSelect.setOnClickListener(new OnClickListener() {
 
@@ -236,13 +250,26 @@ public class SmartShopBaseActivity extends AdActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void ShowTransactionOut(TransactionOut out) {	
-		final String result = out.toString(); 
+	private void ShowTransactionOut(TransactionOut out) {
+		final String result = out.toString();
 		SmartShopBaseActivity.this.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
 				mAnswerTextView.setText(result);
+				Toast.makeText(getApplicationContext(), result,
+						Toast.LENGTH_LONG).show();
+
+				if (!posCallbackee.getTicket().isEmpty()) {
+					Intent intent = new Intent(getApplicationContext(),
+							TicketListActivity.class);
+					Bundle b = new Bundle();
+					b.putStringArrayList("ticket",
+							(ArrayList<String>) posCallbackee.getTicket());
+					intent.putExtras(b);
+
+					startActivity(intent);
+				}
 
 			}
 		});
@@ -270,8 +297,8 @@ public class SmartShopBaseActivity extends AdActivity {
 		case ACTIVITY_INTENT_ID:
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
-					mAnswerTextView.setText(data.toString());						
-				}	
+					mAnswerTextView.setText(data.toString());
+				}
 			}
 			break;
 		}
@@ -347,6 +374,11 @@ public class SmartShopBaseActivity extends AdActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
+
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(BT_ADDRESS, blueHwAddress.getText().toString());
+		editor.commit();
 
 		// EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}

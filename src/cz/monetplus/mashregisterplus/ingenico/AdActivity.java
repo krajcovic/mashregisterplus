@@ -16,6 +16,9 @@ public class AdActivity extends Activity {
 	
 	/* Your ad unit id. Replace with your actual ad unit id. */
 	private static final String AD_UNIT_ID = "ca-app-pub-4197154738167514/1390370981";
+	
+	protected static final String PREFS_NAME = "MashRegisterPlus.properties";
+	protected static final String BT_ADDRESS = "lastUsedBtAddress";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

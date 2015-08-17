@@ -227,6 +227,7 @@
                     android:text="@string/doreturn" />
 
             </LinearLayout>
+            
 
             <TextView
                 android:id="@+id/textAnswer"
