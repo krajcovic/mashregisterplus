@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 import cz.monetplus.blueterm.PosCallbacks;
 
@@ -25,11 +22,6 @@ public class PosCallbackee implements PosCallbacks {
 	 * 
 	 */
 	private Context context;
-
-	/**
-	 * 
-	 */
-	private Boolean isSignOk;
 
 	/**
 	 * 
@@ -54,12 +46,14 @@ public class PosCallbackee implements PosCallbacks {
 	
 	@Override
 	public void ticketFinish() {
-		// Ukonci listek		
+		// Ukonci listek	
+		Log.i(TAG, "Call cut on printer");
 	}
 	
 	@Override
 	public void progress(final String line) {
 		// Zaloguj si kam chces
+		Log.i(TAG, line);
 	}
 
 	public void progressToast(final String line) {

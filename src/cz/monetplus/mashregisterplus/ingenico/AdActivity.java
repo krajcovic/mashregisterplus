@@ -1,21 +1,17 @@
 package cz.monetplus.mashregisterplus.ingenico;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
-import cz.monetplus.mashregisterplus.ingenico.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
-import android.widget.LinearLayout;
 
 public class AdActivity extends Activity {
 	
 	private AdView adView;
 	
 	/* Your ad unit id. Replace with your actual ad unit id. */
-	private static final String AD_UNIT_ID = "ca-app-pub-4197154738167514/1390370981";
+//	private static final String AD_UNIT_ID = "ca-app-pub-4197154738167514/1390370981";
 	
 	protected static final String PREFS_NAME = "MashRegisterPlus.properties";
 	protected static final String BT_ADDRESS = "lastUsedBtAddress";

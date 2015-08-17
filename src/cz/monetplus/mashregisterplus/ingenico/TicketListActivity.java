@@ -2,7 +2,6 @@ package cz.monetplus.mashregisterplus.ingenico;
 
 import java.util.List;
 
-import cz.monetplus.blueterm.TransactionCommand;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;

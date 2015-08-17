@@ -2,8 +2,6 @@ package cz.monetplus.mashregisterplus.ingenico;
 
 import java.util.ArrayList;
 
-import javax.crypto.spec.PSource;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
