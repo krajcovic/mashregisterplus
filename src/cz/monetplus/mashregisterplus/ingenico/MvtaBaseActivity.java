@@ -1,5 +1,7 @@
 package cz.monetplus.mashregisterplus.ingenico;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -131,15 +133,17 @@ public class MvtaBaseActivity extends AdActivity {
 
 		setupButtons();
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
-		
+
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		blueHwAddress.setText(settings.getString(BT_ADDRESS, getString(R.string.default_select_device)));
+		blueHwAddress.setText(settings.getString(BT_ADDRESS,
+				getString(R.string.default_select_device)));
 
-		if (blueHwAddress.getText().equals(getString(R.string.default_select_device))) {
+		if (blueHwAddress.getText().equals(
+				getString(R.string.default_select_device))) {
 			setButtons(false);
 		}
-		
+
 		this.posCallbackee = new PosCallbackee(MvtaBaseActivity.this,
 				getApplicationContext());
 	}
@@ -242,16 +246,30 @@ public class MvtaBaseActivity extends AdActivity {
 	}
 
 	private void ShowTransactionOut(TransactionOut out) {
-		final String result = out.toString();
+		if (out != null) {
+			final String result = out.toString();
 
-		MvtaBaseActivity.this.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				mAnswerTextView.setText(result);
-				
-				Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-			}
-		});
+			MvtaBaseActivity.this.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mAnswerTextView.setText(result);
+
+					Toast.makeText(getApplicationContext(), result,
+							Toast.LENGTH_LONG).show();
+
+					if (!posCallbackee.getTicket().isEmpty()) {
+						Intent intent = new Intent(getApplicationContext(),
+								TicketListActivity.class);
+						Bundle b = new Bundle();
+						b.putStringArrayList("ticket",
+								(ArrayList<String>) posCallbackee.getTicket());
+						intent.putExtras(b);
+
+						startActivity(intent);
+					}
+				}
+			});
+		}
 	}
 
 	@Override
@@ -298,8 +316,20 @@ public class MvtaBaseActivity extends AdActivity {
 
 		@Override
 		protected TransactionOut doInBackground(TransactionIn... params) {
-			return MonetBTAPI.doTransaction(
-			/* getApplicationContext() */MvtaBaseActivity.this, params[0]);
+			try {
+				return MonetBTAPI.doTransaction(MvtaBaseActivity.this,
+						params[0]);
+			} catch (Exception e) {
+				MvtaBaseActivity.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(getApplicationContext(),
+								"Another thread work with blueterm.",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+			return null;
 		}
 
 		@Override
@@ -309,8 +339,10 @@ public class MvtaBaseActivity extends AdActivity {
 
 		@Override
 		protected void onPostExecute(TransactionOut result) {
-			// do the analysis of the returned data of the function
-			ShowTransactionOut(result);
+
+			if (result != null) {
+				ShowTransactionOut(result);
+			}
 			transactionTask = null;
 		}
 	}
@@ -348,7 +380,7 @@ public class MvtaBaseActivity extends AdActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		
+
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(BT_ADDRESS, blueHwAddress.getText().toString());

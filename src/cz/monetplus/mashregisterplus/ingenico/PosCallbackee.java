@@ -59,7 +59,7 @@ public class PosCallbackee implements PosCallbacks {
 	
 	@Override
 	public void progress(final String line) {
-
+		// Zaloguj si kam chces
 	}
 
 	public void progressToast(final String line) {
@@ -119,8 +119,7 @@ public class PosCallbackee implements PosCallbacks {
 
 	@Override
 	public Boolean isConnectivity() {
-		// TODO: zkontroluj ze su online.
-
+		// Zatim se nepouziva
 		return Boolean.TRUE;
 	}
 
