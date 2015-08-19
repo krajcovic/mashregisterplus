@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import cz.monetplus.blueterm.Balancing;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
@@ -139,6 +140,7 @@ public class MbcaBaseActivity extends AdActivity {
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
 			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
+			transIn.setBalancing(new Balancing());
 
 			if (transactionTask != null) {
 				transactionTask.cancel(true);
