@@ -189,21 +189,24 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/infoButtonText" />
+                    android:text="@string/infoButtonText"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/buttonTransactionHandshakeMvta"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/dotransactionhandshake" />
+                    android:text="@string/dotransactionhandshake"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/buttonRechargingTransactionMvta"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/doRecharging" />
+                    android:text="@string/doRecharging"
+                    style="?android:attr/buttonBarButtonStyle" />
             </LinearLayout>
 
             <TextView

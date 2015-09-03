@@ -7,12 +7,13 @@ import android.os.Bundle;
 import android.view.Window;
 
 public class AdActivity extends Activity {
-	
+
 	private AdView adView;
-	
+
 	/* Your ad unit id. Replace with your actual ad unit id. */
-//	private static final String AD_UNIT_ID = "ca-app-pub-4197154738167514/1390370981";
-	
+	// private static final String AD_UNIT_ID =
+	// "ca-app-pub-4197154738167514/1390370981";
+
 	protected static final String PREFS_NAME = "MashRegisterPlus.properties";
 	protected static final String BT_ADDRESS = "lastUsedBtAddress";
 
@@ -24,28 +25,29 @@ public class AdActivity extends Activity {
 
 	public void adAddView() {
 		getActionBar().show();
-		
+
 		// Create an ad.
-//		adView = new AdView(this);
-//		adView.setAdSize(AdSize.BANNER);
-//		adView.setAdUnitId(AD_UNIT_ID);
-		
+		// adView = new AdView(this);
+		// adView.setAdSize(AdSize.BANNER);
+		// adView.setAdUnitId(AD_UNIT_ID);
+
 		// Add the AdView to the view hierarchy. The view will have no size
 		// until the ad is loaded.
-//		LinearLayout layout = (LinearLayout) findViewById(R.id.linearLayoutAds);
-//		layout.addView(adView);
+		// LinearLayout layout = (LinearLayout)
+		// findViewById(R.id.linearLayoutAds);
+		// layout.addView(adView);
 
 		// Create an ad request. Check logcat output for the hashed device ID to
 		// get test ads on a physical device.
-//		AdRequest adRequest = new AdRequest.Builder()
-//				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//				.addTestDevice("AAA780CD3E74B3969124CE8589CC2C28").build();
+		// AdRequest adRequest = new AdRequest.Builder()
+		// .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+		// .addTestDevice("AAA780CD3E74B3969124CE8589CC2C28").build();
 
 		// Start loading the ad in the background.
-//		adView.loadAd(adRequest);
-		
+		// adView.loadAd(adRequest);
+
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		if (adView != null) {
@@ -73,6 +75,5 @@ public class AdActivity extends Activity {
 			adView.resume();
 		}
 	}
-	
 
 }

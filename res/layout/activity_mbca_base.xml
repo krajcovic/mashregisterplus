@@ -184,21 +184,24 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/infoButtonText" />
+                    android:text="@string/infoButtonText"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/buttonTransactionHandshake"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/dotransactionhandshake" />
+                    android:text="@string/dotransactionhandshake"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/buttonPayTransaction"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/dotransactionpay" />
+                    android:text="@string/dotransactionpay"
+                    style="?android:attr/buttonBarButtonStyle" />
             </LinearLayout>
 
             <LinearLayout
@@ -210,21 +213,24 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/buttonBalancing"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/dotransactionbalancing" />
+                    android:text="@string/dotransactionbalancing"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/button02"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:enabled="false" />
+                    android:enabled="false"
+                    style="?android:attr/buttonBarButtonStyle" />
 
             </LinearLayout>
 
