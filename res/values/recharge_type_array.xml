@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="recharge_type_array">
+    <string-array name="recharge_type_array" translatable="false">
         <item>Cash</item>
         <item>Card</item>
     </string-array>
