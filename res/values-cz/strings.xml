@@ -37,5 +37,10 @@
     <string name="button_close">Close</string>
     <string name="title_printer">Printer</string>
     <string name="default_select_device">Select device</string>
+        <string name="default_terminal_name">POP-3E-5A-82</string>
+    <string name="hint_terminal_name">Terminal name</string>
+    <string name="button_getpin">GetPin</string>
+    <string name="title_bt_enabled">BT enabled</string>
+    <string name="title_tcp_enabled">TCP enabled</string>
 
 </resources>

@@ -87,7 +87,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:text="POP-3E-5A-82" >
+                    android:text="@string/default_terminal_name"
+                    android:hint="@string/hint_terminal_name" >
 
                     <requestFocus />
                 </EditText>
@@ -97,7 +98,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="GetPin" />
+                    android:text="@string/button_getpin" />
             </LinearLayout>
 
             <LinearLayout
