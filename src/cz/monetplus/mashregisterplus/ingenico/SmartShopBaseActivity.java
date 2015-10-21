@@ -128,8 +128,9 @@ public class SmartShopBaseActivity extends AdActivity {
 
 	private void doTransacation(TransactionCommand command) {
 		try {
-			mAnswerTextView.setText("Calling " + command);
+			mAnswerTextView.setText("Calling " + command);			
 			posCallbackee.getTicket().clear();
+			
 			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
 					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double

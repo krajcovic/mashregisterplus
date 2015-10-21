@@ -136,6 +136,7 @@ public class MbcaBaseActivity extends AdActivity {
 	private void doTransaction(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
+			posCallbackee.getTicket().clear();
 			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
 					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
@@ -164,6 +165,7 @@ public class MbcaBaseActivity extends AdActivity {
 	private void doReversal(TransactionCommand command, String authCode) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
+			posCallbackee.getTicket().clear();
 			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
 					.toString(), command, posCallbackee);
 			if (authCode != null) {

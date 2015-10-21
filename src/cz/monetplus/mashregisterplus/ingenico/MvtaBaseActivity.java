@@ -146,6 +146,8 @@ public class MvtaBaseActivity extends AdActivity {
 	private void doTransaction(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
+			posCallbackee.getTicket().clear();
+			
 			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
 					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
