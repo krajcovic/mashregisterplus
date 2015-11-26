@@ -140,7 +140,7 @@ public class MbcaBaseActivity extends AdActivity {
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
 			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
-			transIn.setBalancing(new Balancing());
+//			transIn.setBalancing(new Balancing());
 
 			if (transactionTask != null) {
 				transactionTask.cancel(true);
