@@ -24,6 +24,7 @@ import android.widget.Toast;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
+import cz.monetplus.blueterm.TransactionInVx600;
 import cz.monetplus.blueterm.TransactionOut;
 import cz.monetplus.mashregisterplus.ingenico.R;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
@@ -56,7 +57,7 @@ public class SmartShopBaseActivity extends AdActivity {
 
 	private Menu propertiesMenu;
 
-	private PosCallbackee posCallbackee;
+//	private PosCallbackee posCallbackee;
 
 	// private AdView adView;
 
@@ -122,16 +123,17 @@ public class SmartShopBaseActivity extends AdActivity {
 			setButtons(false);
 		}
 
-		this.posCallbackee = new PosCallbackee(SmartShopBaseActivity.this,
-				getApplicationContext());
+//		this.posCallbackee = new PosCallbackee(SmartShopBaseActivity.this,
+//				getApplicationContext());
 	}
 
 	private void doTransacation(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
-			posCallbackee.getTicket().clear();
-			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
-					.toString(), command, posCallbackee);
+//			posCallbackee.getTicket().clear();
+			TransactionInVx600 transIn = new TransactionInVx600(command);
+//			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+//					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
@@ -172,7 +174,9 @@ public class SmartShopBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransacation(TransactionCommand.SMART_SHOP_GET_APP_INFO);
+//				doTransacation(TransactionCommand.SMART_SHOP_GET_APP_INFO);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
+				
 			}
 		});
 
@@ -181,7 +185,8 @@ public class SmartShopBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransacation(TransactionCommand.SMART_SHOP_PAY);
+//				doTransacation(TransactionCommand.SMART_SHOP_PAY);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 
 		});
@@ -191,7 +196,8 @@ public class SmartShopBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransacation(TransactionCommand.SMART_SHOP_RETURN);
+//				doTransacation(TransactionCommand.SMART_SHOP_RETURN);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -200,7 +206,8 @@ public class SmartShopBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransacation(TransactionCommand.SMART_SHOP_STATE);
+//				doTransacation(TransactionCommand.SMART_SHOP_STATE);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -209,7 +216,8 @@ public class SmartShopBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransacation(TransactionCommand.SMART_SHOP_HANDSHAKE);
+//				doTransacation(TransactionCommand.SMART_SHOP_HANDSHAKE);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -218,7 +226,8 @@ public class SmartShopBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransacation(TransactionCommand.SMART_SHOP_PARAMETRS_CALL);
+//				doTransacation(TransactionCommand.SMART_SHOP_PARAMETRS_CALL);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -259,16 +268,16 @@ public class SmartShopBaseActivity extends AdActivity {
 					Toast.makeText(getApplicationContext(), result,
 							Toast.LENGTH_LONG).show();
 
-					if (!posCallbackee.getTicket().isEmpty()) {
-						Intent intent = new Intent(getApplicationContext(),
-								TicketListActivity.class);
-						Bundle b = new Bundle();
-						b.putStringArrayList("ticket",
-								(ArrayList<String>) posCallbackee.getTicket());
-						intent.putExtras(b);
-
-						startActivity(intent);
-					}
+//					if (!posCallbackee.getTicket().isEmpty()) {
+//						Intent intent = new Intent(getApplicationContext(),
+//								TicketListActivity.class);
+//						Bundle b = new Bundle();
+//						b.putStringArrayList("ticket",
+//								(ArrayList<String>) posCallbackee.getTicket());
+//						intent.putExtras(b);
+//
+//						startActivity(intent);
+//					}
 
 				}
 			});

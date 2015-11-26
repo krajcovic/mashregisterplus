@@ -19,6 +19,7 @@ import android.widget.Toast;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
+import cz.monetplus.blueterm.TransactionInVx600;
 import cz.monetplus.blueterm.TransactionOut;
 import cz.monetplus.mashregisterplus.ingenico.R;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
@@ -42,7 +43,7 @@ public class ServisActivity extends AdActivity {
 
 	private Menu propertiesMenu;
 
-	private PosCallbackee posCallbackee;
+//	private PosCallbackee posCallbackee;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +84,8 @@ public class ServisActivity extends AdActivity {
 			setButtons(false);
 		}
 
-		this.posCallbackee = new PosCallbackee(ServisActivity.this,
-				getApplicationContext());
+//		this.posCallbackee = new PosCallbackee(ServisActivity.this,
+//				getApplicationContext());
 	}
 
 	private void setupButtons() {
@@ -95,9 +96,11 @@ public class ServisActivity extends AdActivity {
 			public void onClick(View v) {
 				try {
 					EditText ettn = (EditText) findViewById(R.id.editTextTerminalName);
-					Toast.makeText(getApplicationContext(),
-							MonetBTAPI.getPin(ettn.getText().toString()),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
+//					Toast.makeText(getApplicationContext(),
+//							MonetBTAPI.getPin(ettn.getText().toString()),
+//							Toast.LENGTH_LONG).show();
+					
 
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(), e.getMessage(),
@@ -115,10 +118,11 @@ public class ServisActivity extends AdActivity {
 				try {
 					// ShowTransactionOut(new TransactionOu));
 					mAnswerTextView.setText("Calling "
-							+ TransactionCommand.ONLY_CONNECT);
-					TransactionIn transIn = new TransactionIn(blueHwAddress
-							.getText().toString(),
-							TransactionCommand.ONLY_CONNECT, posCallbackee);
+							+ TransactionCommand.ONLYCONNECT);
+//					TransactionIn transIn = new TransactionIn(blueHwAddress
+//							.getText().toString(),
+//							TransactionCommand.ONLYCONNECT, posCallbackee);
+					TransactionInVx600 transIn = new TransactionInVx600(TransactionCommand.ONLYCONNECT);
 
 					transactionTask = new DoTransactionTask();
 					transactionTask.execute(transIn);
@@ -183,16 +187,16 @@ public class ServisActivity extends AdActivity {
 					Toast.makeText(getApplicationContext(), result,
 							Toast.LENGTH_LONG).show();
 
-					if (!posCallbackee.getTicket().isEmpty()) {
-						Intent intent = new Intent(getApplicationContext(),
-								TicketListActivity.class);
-						Bundle b = new Bundle();
-						b.putStringArrayList("ticket",
-								(ArrayList<String>) posCallbackee.getTicket());
-						intent.putExtras(b);
-
-						startActivity(intent);
-					}
+//					if (!posCallbackee.getTicket().isEmpty()) {
+//						Intent intent = new Intent(getApplicationContext(),
+//								TicketListActivity.class);
+//						Bundle b = new Bundle();
+//						b.putStringArrayList("ticket",
+//								(ArrayList<String>) posCallbackee.getTicket());
+//						intent.putExtras(b);
+//
+//						startActivity(intent);
+//					}
 				}
 			});
 		}

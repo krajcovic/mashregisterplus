@@ -1,7 +1,5 @@
 package cz.monetplus.mashregisterplus.ingenico;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,9 +21,8 @@ import android.widget.Toast;
 import cz.monetplus.blueterm.MonetBTAPI;
 import cz.monetplus.blueterm.TransactionCommand;
 import cz.monetplus.blueterm.TransactionIn;
+import cz.monetplus.blueterm.TransactionInVx600;
 import cz.monetplus.blueterm.TransactionOut;
-import cz.monetplus.blueterm.vprotocol.RechargingType;
-import cz.monetplus.mashregisterplus.ingenico.R;
 import cz.monetplus.mashregisterplus.util.SystemUiHider;
 
 /**
@@ -51,14 +48,14 @@ public class MvtaBaseActivity extends AdActivity {
 	private TextView mAnswerTextView;
 
 	private String currentCurrency;
-	private RechargingType rechargingType;
+//	private RechargingType rechargingType;
 	private TextView blueHwAddress;
 
 	DoTransactionTask transactionTask = null;
 
 	private Menu propertiesMenu;
 
-	private PosCallbackee posCallbackee;
+//	private PosCallbackee posCallbackee;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +115,7 @@ public class MvtaBaseActivity extends AdActivity {
 							View arg1, int pos, long arg3) {
 						String string = parent.getItemAtPosition(pos)
 								.toString();
-						rechargingType = RechargingType.valueOf(string);
+//						rechargingType = RechargingType.valueOf(string);
 					}
 
 					@Override
@@ -139,22 +136,23 @@ public class MvtaBaseActivity extends AdActivity {
 			setButtons(false);
 		}
 
-		this.posCallbackee = new PosCallbackee(MvtaBaseActivity.this,
-				getApplicationContext());
+//		this.posCallbackee = new PosCallbackee(MvtaBaseActivity.this,
+//				getApplicationContext());
 	}
 
 	private void doTransaction(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
-			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
-					.toString(), command, posCallbackee);
+			TransactionInVx600 transIn = new TransactionInVx600(command);
+//			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+//					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
 			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
-			transIn.setTranId(Long
-					.valueOf(mTranIdEditText.getText().toString()));
-			transIn.setRechargingType(rechargingType);
+//			transIn.setTranId(Long
+//					.valueOf(mTranIdEditText.getText().toString()));
+//			transIn.setRechargingType(rechargingType);
 
 			if (transactionTask != null) {
 				transactionTask.cancel(true);
@@ -191,7 +189,8 @@ public class MvtaBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransaction(TransactionCommand.MVTA_INFO);
+//				doTransaction(TransactionCommand.MVTA_INFO);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -200,7 +199,8 @@ public class MvtaBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransaction(TransactionCommand.MVTA_RECHARGE);
+//				doTransaction(TransactionCommand.MVTA_RECHARGE);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 
 		});
@@ -210,7 +210,8 @@ public class MvtaBaseActivity extends AdActivity {
 
 			@Override
 			public void onClick(View v) {
-				doTransaction(TransactionCommand.MVTA_HANDSHAKE);
+//				doTransaction(TransactionCommand.MVTA_HANDSHAKE);
+				Toast.makeText(getApplicationContext(), "Not supported operation", Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -252,16 +253,16 @@ public class MvtaBaseActivity extends AdActivity {
 					Toast.makeText(getApplicationContext(), result,
 							Toast.LENGTH_LONG).show();
 
-					if (!posCallbackee.getTicket().isEmpty()) {
-						Intent intent = new Intent(getApplicationContext(),
-								TicketListActivity.class);
-						Bundle b = new Bundle();
-						b.putStringArrayList("ticket",
-								(ArrayList<String>) posCallbackee.getTicket());
-						intent.putExtras(b);
-
-						startActivity(intent);
-					}
+//					if (!posCallbackee.getTicket().isEmpty()) {
+//						Intent intent = new Intent(getApplicationContext(),
+//								TicketListActivity.class);
+//						Bundle b = new Bundle();
+//						b.putStringArrayList("ticket",
+//								(ArrayList<String>) posCallbackee.getTicket());
+//						intent.putExtras(b);
+//
+//						startActivity(intent);
+//					}
 				}
 			});
 		}
