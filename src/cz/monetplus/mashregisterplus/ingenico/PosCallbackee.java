@@ -47,6 +47,7 @@ public class PosCallbackee implements PosCallbacks {
 	@Override
 	public void ticketFinish() {
 		// Ukonci listek	
+		getTicket().add("*** Ticket finish ***");	
 		Log.i(TAG, "Call cut on printer");
 	}
 	

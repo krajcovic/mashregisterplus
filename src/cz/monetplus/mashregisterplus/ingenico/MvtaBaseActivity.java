@@ -72,7 +72,7 @@ public class MvtaBaseActivity extends AdActivity {
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
 		mRechargeTypeSpinner = (Spinner) findViewById(R.id.spinnerRechargeType);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
-		mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
+		mTranIdEditText = (EditText) findViewById(R.id.editTicketNumber);
 
 		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
 

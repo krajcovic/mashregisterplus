@@ -165,7 +165,7 @@
                 </EditText>
 
                 <EditText
-                    android:id="@+id/editTextTranId"
+                    android:id="@+id/editTicketNumber"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -225,12 +225,12 @@
                     style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
-                    android:id="@+id/button02"
+                    android:id="@+id/buttonLastTran"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:enabled="false"
-                    style="?android:attr/buttonBarButtonStyle" />
+                    android:text="@string/lasttran" />
 
             </LinearLayout>
 

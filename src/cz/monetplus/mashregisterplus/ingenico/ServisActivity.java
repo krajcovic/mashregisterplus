@@ -1,8 +1,11 @@
 package cz.monetplus.mashregisterplus.ingenico;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -63,10 +66,8 @@ public class ServisActivity extends AdActivity {
 			@Override
 			public void onClick(View v) {
 				// Launch the DeviceListActivity to see devices and do scan
-				Intent serverIntent = new Intent(getApplicationContext(),
-						DeviceListActivity.class);
-				startActivityForResult(serverIntent,
-						REQUEST_CONNECT_DEVICE_INSECURE);
+				Intent serverIntent = new Intent(getApplicationContext(), DeviceListActivity.class);
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
 
 			}
 		});
@@ -75,16 +76,26 @@ public class ServisActivity extends AdActivity {
 
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		blueHwAddress.setText(settings.getString(BT_ADDRESS,
-				getString(R.string.default_select_device)));
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, getString(R.string.default_select_device)));
 
-		if (blueHwAddress.getText().equals(
-				getString(R.string.default_select_device))) {
+		if (blueHwAddress.getText().equals(getString(R.string.default_select_device))) {
 			setButtons(false);
 		}
 
-		this.posCallbackee = new PosCallbackee(ServisActivity.this,
-				getApplicationContext());
+		updateTerminalName();
+
+		this.posCallbackee = new PosCallbackee(ServisActivity.this, getApplicationContext());
+	}
+
+	private void updateTerminalName() {
+		BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (defaultAdapter != null) {
+			BluetoothDevice remoteDevice = defaultAdapter.getRemoteDevice(blueHwAddress.getText().toString());
+			if (remoteDevice != null) {
+				EditText ettn = (EditText) findViewById(R.id.editTextTerminalName);
+				ettn.setText(remoteDevice.getName());
+			}
+		}
 	}
 
 	private void setupButtons() {
@@ -95,13 +106,11 @@ public class ServisActivity extends AdActivity {
 			public void onClick(View v) {
 				try {
 					EditText ettn = (EditText) findViewById(R.id.editTextTerminalName);
-					Toast.makeText(getApplicationContext(),
-							MonetBTAPI.getPin(ettn.getText().toString()),
+					Toast.makeText(getApplicationContext(), MonetBTAPI.getPin(ettn.getText().toString()),
 							Toast.LENGTH_LONG).show();
 
 				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 				}
 
 			}
@@ -114,18 +123,15 @@ public class ServisActivity extends AdActivity {
 			public void onClick(View v) {
 				try {
 					// ShowTransactionOut(new TransactionOu));
-					mAnswerTextView.setText("Calling "
-							+ TransactionCommand.ONLY_CONNECT);
-					TransactionIn transIn = new TransactionIn(blueHwAddress
-							.getText().toString(),
+					mAnswerTextView.setText("Calling " + TransactionCommand.ONLY_CONNECT);
+					TransactionIn transIn = new TransactionIn(blueHwAddress.getText().toString(),
 							TransactionCommand.ONLY_CONNECT, posCallbackee);
 
 					transactionTask = new DoTransactionTask();
 					transactionTask.execute(transIn);
 
 				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 				}
 
 			}
@@ -140,8 +146,7 @@ public class ServisActivity extends AdActivity {
 				try {
 					MonetBTAPI.doCancel();
 				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), e.getMessage(),
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -180,15 +185,12 @@ public class ServisActivity extends AdActivity {
 				@Override
 				public void run() {
 					mAnswerTextView.setText(result);
-					Toast.makeText(getApplicationContext(), result,
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 
 					if (!posCallbackee.getTicket().isEmpty()) {
-						Intent intent = new Intent(getApplicationContext(),
-								TicketListActivity.class);
+						Intent intent = new Intent(getApplicationContext(), TicketListActivity.class);
 						Bundle b = new Bundle();
-						b.putStringArrayList("ticket",
-								(ArrayList<String>) posCallbackee.getTicket());
+						b.putStringArrayList("ticket", (ArrayList<String>) posCallbackee.getTicket());
 						intent.putExtras(b);
 
 						startActivity(intent);
@@ -206,13 +208,11 @@ public class ServisActivity extends AdActivity {
 		case REQUEST_CONNECT_DEVICE_INSECURE:
 			if (resultCode == Activity.RESULT_OK) {
 				if (data.hasExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS)) {
-					blueHwAddress
-							.setText(data
-									.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
+					blueHwAddress.setText(data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
 
 					if (blueHwAddress.getText().length() > 0) {
 						setButtons(true);
-
+						updateTerminalName();
 					}
 				}
 			}
@@ -234,8 +234,7 @@ public class ServisActivity extends AdActivity {
 		button.setEnabled(enabled);
 	}
 
-	class DoTransactionTask extends
-			AsyncTask<TransactionIn, Void, TransactionOut> {
+	class DoTransactionTask extends AsyncTask<TransactionIn, Void, TransactionOut> {
 
 		@Override
 		protected TransactionOut doInBackground(TransactionIn... params) {
@@ -245,9 +244,8 @@ public class ServisActivity extends AdActivity {
 				ServisActivity.this.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(getApplicationContext(),
-								"Another thread work with blueterm.",
-								Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), "Another thread work with blueterm.", Toast.LENGTH_LONG)
+								.show();
 					}
 				});
 			}

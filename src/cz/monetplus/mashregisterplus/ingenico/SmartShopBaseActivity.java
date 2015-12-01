@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,7 +46,8 @@ public class SmartShopBaseActivity extends AdActivity {
 	private EditText mAmountIdEditText;
 	private Spinner mCurrencySpinner;
 	private EditText mInvoiceIdEditText;
-	// private EditText mTranIdEditText;
+	private CheckBox cbPartialPayment;
+	private EditText mTicketNumberEditText;
 
 	private TextView mAnswerTextView;
 
@@ -77,7 +79,8 @@ public class SmartShopBaseActivity extends AdActivity {
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
-		// mTranIdEditText = (EditText) findViewById(R.id.editTextTranId);
+		mTicketNumberEditText = (EditText) findViewById(R.id.editTicketNumber);
+		cbPartialPayment = (CheckBox) findViewById(R.id.cbPartial);
 
 		mAnswerTextView = (TextView) findViewById(R.id.textAnswer);
 
@@ -86,56 +89,49 @@ public class SmartShopBaseActivity extends AdActivity {
 
 		// Create an ArrayAdapter using the string array and a default spinner
 		// layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.currency_array,
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.currency_array,
 				android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		mCurrencySpinner.setAdapter(adapter);
-		mCurrencySpinner
-				.setOnItemSelectedListener(new OnItemSelectedListener() {
+		mCurrencySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-					@Override
-					public void onItemSelected(AdapterView<?> parent,
-							View arg1, int pos, long arg3) {
-						currentCurrency = parent.getItemAtPosition(pos)
-								.toString();
-					}
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View arg1, int pos, long arg3) {
+				currentCurrency = parent.getItemAtPosition(pos).toString();
+			}
 
-					@Override
-					public void onNothingSelected(AdapterView<?> arg0) {
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
 
-					}
-				});
+			}
+		});
 
 		blueHwAddress = (TextView) findViewById(R.id.textViewHw);
 		setupButtons();
 
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		blueHwAddress.setText(settings.getString(BT_ADDRESS,
-				getString(R.string.default_select_device)));
+		blueHwAddress.setText(settings.getString(BT_ADDRESS, getString(R.string.default_select_device)));
 
-		if (blueHwAddress.getText().equals(
-				getString(R.string.default_select_device))) {
+		if (blueHwAddress.getText().equals(getString(R.string.default_select_device))) {
 			setButtons(false);
 		}
 
-		this.posCallbackee = new PosCallbackee(SmartShopBaseActivity.this,
-				getApplicationContext());
+		this.posCallbackee = new PosCallbackee(SmartShopBaseActivity.this, getApplicationContext());
 	}
 
 	private void doTransacation(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
 			posCallbackee.getTicket().clear();
-			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
-					.toString(), command, posCallbackee);
-			transIn.setAmount(Long.valueOf((long) (Double
-					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+			TransactionIn transIn = new TransactionIn(blueHwAddress.getText().toString(), command, posCallbackee);
+			transIn.setAmount(Long.valueOf((long) (Double.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
 			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
+			transIn.setPartialPayment(cbPartialPayment.isChecked());
+			transIn.setTicketNumber(mTicketNumberEditText.getText().toString());
 
 			if (transactionTask != null) {
 				transactionTask.cancel(true);
@@ -146,8 +142,7 @@ public class SmartShopBaseActivity extends AdActivity {
 			transactionTask.execute(transIn);
 
 		} catch (Exception e) {
-			Toast.makeText(getApplicationContext(), e.getMessage(),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -159,10 +154,8 @@ public class SmartShopBaseActivity extends AdActivity {
 			@Override
 			public void onClick(View v) {
 				// Launch the DeviceListActivity to see devices and do scan
-				Intent serverIntent = new Intent(getApplicationContext(),
-						DeviceListActivity.class);
-				startActivityForResult(serverIntent,
-						REQUEST_CONNECT_DEVICE_INSECURE);
+				Intent serverIntent = new Intent(getApplicationContext(), DeviceListActivity.class);
+				startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
 
 			}
 		});
@@ -256,15 +249,12 @@ public class SmartShopBaseActivity extends AdActivity {
 				@Override
 				public void run() {
 					mAnswerTextView.setText(result);
-					Toast.makeText(getApplicationContext(), result,
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
 
 					if (!posCallbackee.getTicket().isEmpty()) {
-						Intent intent = new Intent(getApplicationContext(),
-								TicketListActivity.class);
+						Intent intent = new Intent(getApplicationContext(), TicketListActivity.class);
 						Bundle b = new Bundle();
-						b.putStringArrayList("ticket",
-								(ArrayList<String>) posCallbackee.getTicket());
+						b.putStringArrayList("ticket", (ArrayList<String>) posCallbackee.getTicket());
 						intent.putExtras(b);
 
 						startActivity(intent);
@@ -283,9 +273,7 @@ public class SmartShopBaseActivity extends AdActivity {
 		case REQUEST_CONNECT_DEVICE_INSECURE:
 			if (resultCode == Activity.RESULT_OK) {
 				if (data.hasExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS)) {
-					blueHwAddress
-							.setText(data
-									.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
+					blueHwAddress.setText(data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
 
 					if (blueHwAddress.getText().length() > 0) {
 						setButtons(true);
@@ -319,21 +307,18 @@ public class SmartShopBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 	}
 
-	class DoTransactionTask extends
-			AsyncTask<TransactionIn, Void, TransactionOut> {
+	class DoTransactionTask extends AsyncTask<TransactionIn, Void, TransactionOut> {
 
 		@Override
 		protected TransactionOut doInBackground(TransactionIn... params) {
 			try {
-				return MonetBTAPI.doTransaction(SmartShopBaseActivity.this,
-						params[0]);
+				return MonetBTAPI.doTransaction(SmartShopBaseActivity.this, params[0]);
 			} catch (Exception e) {
 				SmartShopBaseActivity.this.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(getApplicationContext(),
-								"Another thread work with blueterm.",
-								Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext(), "Another thread work with blueterm.", Toast.LENGTH_LONG)
+								.show();
 					}
 				});
 			}
