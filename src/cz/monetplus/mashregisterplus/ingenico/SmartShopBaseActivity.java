@@ -124,10 +124,17 @@ public class SmartShopBaseActivity extends AdActivity {
 
 	private void doTransacation(TransactionCommand command) {
 		try {
-			mAnswerTextView.setText("Calling " + command);
+			mAnswerTextView.setText("Calling " + command);			
 			posCallbackee.getTicket().clear();
-			TransactionIn transIn = new TransactionIn(blueHwAddress.getText().toString(), command, posCallbackee);
-			transIn.setAmount(Long.valueOf((long) (Double.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+//<<<<<<< HEAD
+//			TransactionIn transIn = new TransactionIn(blueHwAddress.getText().toString(), command, posCallbackee);
+//			transIn.setAmount(Long.valueOf((long) (Double.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+//=======
+			
+			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+					.toString(), command, posCallbackee);
+			transIn.setAmount(Long.valueOf((long) (Double
+					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
 			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
 			transIn.setPartialPayment(cbPartialPayment.isChecked());
