@@ -59,6 +59,8 @@ public class MbcaBaseActivity extends AdActivity {
 
 	private PosCallbackee posCallbackee;
 
+	private String lastAuthcode = null;
+
 	// private AdView adView;
 
 	// /* Your ad unit id. Replace with your actual ad unit id. */
@@ -127,11 +129,44 @@ public class MbcaBaseActivity extends AdActivity {
 	private void doTransaction(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
-			TransactionIn transIn = new TransactionIn(blueHwAddress.getText().toString(), command, posCallbackee);
-			transIn.setAmount(Long.valueOf((long) (Double.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+//<<<<<<< HEAD
+//			TransactionIn transIn = new TransactionIn(blueHwAddress.getText().toString(), command, posCallbackee);
+//			transIn.setAmount(Long.valueOf((long) (Double.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+//=======
+			posCallbackee.getTicket().clear();
+			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+					.toString(), command, posCallbackee);
+			transIn.setAmount(Long.valueOf((long) (Double
+					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
 			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
-			// transIn.setBalancing(new Balancing());
+
+			if (transactionTask != null) {
+				transactionTask.cancel(true);
+				transactionTask = null;
+			}
+
+			transactionTask = new DoTransactionTask();
+			transactionTask.execute(transIn);
+
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), e.getMessage(),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	/**
+	 * @param command
+	 */
+	private void doReversal(TransactionCommand command, String authCode) {
+		try {
+			mAnswerTextView.setText("Calling " + command);
+			posCallbackee.getTicket().clear();
+			TransactionIn transIn = new TransactionIn(blueHwAddress.getText()
+					.toString(), command, posCallbackee);
+			if (authCode != null) {
+				transIn.setAuthCode(authCode);
+			}
 
 			if (transactionTask != null) {
 				transactionTask.cancel(true);
@@ -189,6 +224,17 @@ public class MbcaBaseActivity extends AdActivity {
 
 		});
 
+				
+		temp = (Button) findViewById(R.id.buttonReversalTransaction);
+		temp.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				doReversal(TransactionCommand.MBCA_REVERSAL, lastAuthcode);
+			}
+
+		});
+
 		temp = (Button) findViewById(R.id.buttonTransactionHandshake);
 		temp.setOnClickListener(new OnClickListener() {
 
@@ -236,6 +282,7 @@ public class MbcaBaseActivity extends AdActivity {
 	private void ShowTransactionOut(TransactionOut out) {
 		if (out != null) {
 			final String result = out.toString();
+			lastAuthcode = out.getAuthCode();
 
 			MbcaBaseActivity.this.runOnUiThread(new Runnable() {
 				@Override
@@ -252,6 +299,8 @@ public class MbcaBaseActivity extends AdActivity {
 
 						startActivity(intent);
 					}
+					
+					setButtons(true);
 
 				}
 			});
@@ -296,6 +345,8 @@ public class MbcaBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonLastTran);
 		button.setEnabled(enabled);
+		button = (Button) findViewById(R.id.buttonReversalTransaction);
+		button.setEnabled(lastAuthcode == null ? false : enabled);
 	}
 
 	class DoTransactionTask extends AsyncTask<TransactionIn, Void, TransactionOut> {
