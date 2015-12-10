@@ -12,12 +12,12 @@ import cz.monetplus.blueterm.PosCallbacks;
 public class PosCallbackee implements PosCallbacks {
 
 	private static final String TAG = "PosCallbackee";
-	
+
 	/**
 	 * 
 	 */
 	private Activity activity;
-	
+
 	/**
 	 * 
 	 */
@@ -27,7 +27,9 @@ public class PosCallbackee implements PosCallbacks {
 	 * 
 	 */
 	private List<String> ticket = new ArrayList<String>();
-	
+
+	private static Toast makeText = null;
+
 	/**
 	 * @param activity
 	 * @param context
@@ -40,20 +42,29 @@ public class PosCallbackee implements PosCallbacks {
 	@Override
 	public Boolean ticketLine(final String line) {
 		getTicket().add(line);
-		
+
 		return Boolean.TRUE;
 	}
-	
+
 	@Override
 	public void ticketFinish() {
-		// Ukonci listek	
-		getTicket().add("*** Ticket finish ***");	
+		// Ukonci listek
+		getTicket().add("*** Ticket finish ***");
 		Log.i(TAG, "Call cut on printer");
 	}
-	
+
 	@Override
 	public void progress(final String line) {
-		// Zaloguj si kam chces
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				if (makeText != null) {
+					makeText.cancel();
+					makeText = null;
+				}
+				makeText = Toast.makeText(context, line, Toast.LENGTH_SHORT);
+				makeText.show();
+			}
+		});
 		Log.i(TAG, line);
 	}
 
@@ -67,45 +78,46 @@ public class PosCallbackee implements PosCallbacks {
 
 	@Override
 	public Boolean isSingOk() {
-//		synchronized (isSignOk) {
-//			Runnable runnable = new Runnable() {
-//
-//				final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						switch (which) {
-//						case DialogInterface.BUTTON_POSITIVE:
-//							// Yes button clicked
-//							isSignOk = Boolean.TRUE;
-//							break;
-//
-//						case DialogInterface.BUTTON_NEGATIVE:
-//							isSignOk = Boolean.TRUE;
-//							break;
-//						}
-//						this.notify();
-//					}
-//				};
-//
-//				public void run() {
-//					AlertDialog.Builder builder = new AlertDialog.Builder(
-//							activity);
-//					builder.setMessage("Souhlasí podpis?")
-//							.setPositiveButton("Ano", dialogClickListener)
-//							.setNegativeButton("Ne", dialogClickListener)
-//							.show();
-//				}
-//			};
-//
-//			activity.runOnUiThread(runnable);
-//
-//			try {
-//				runnable.wait();
-//			} catch (InterruptedException e) {
-//				Log.e(TAG, e.getMessage());
-//			}
-//
-//		}
+		// synchronized (isSignOk) {
+		// Runnable runnable = new Runnable() {
+		//
+		// final DialogInterface.OnClickListener dialogClickListener = new
+		// DialogInterface.OnClickListener() {
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// switch (which) {
+		// case DialogInterface.BUTTON_POSITIVE:
+		// // Yes button clicked
+		// isSignOk = Boolean.TRUE;
+		// break;
+		//
+		// case DialogInterface.BUTTON_NEGATIVE:
+		// isSignOk = Boolean.TRUE;
+		// break;
+		// }
+		// this.notify();
+		// }
+		// };
+		//
+		// public void run() {
+		// AlertDialog.Builder builder = new AlertDialog.Builder(
+		// activity);
+		// builder.setMessage("Souhlasí podpis?")
+		// .setPositiveButton("Ano", dialogClickListener)
+		// .setNegativeButton("Ne", dialogClickListener)
+		// .show();
+		// }
+		// };
+		//
+		// activity.runOnUiThread(runnable);
+		//
+		// try {
+		// runnable.wait();
+		// } catch (InterruptedException e) {
+		// Log.e(TAG, e.getMessage());
+		// }
+		//
+		// }
 
 		return Boolean.TRUE;
 	}

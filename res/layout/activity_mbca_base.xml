@@ -203,6 +203,14 @@
                     android:layout_weight="1"
                     android:text="@string/dotransactionpay" />
 
+                <Button
+                    android:id="@+id/buttonLastTran"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="@string/lasttran" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -216,23 +224,22 @@
                     android:layout_weight="1"
                     android:text="@string/dotransactionbalancing"
                     style="?android:attr/buttonBarButtonStyle" />
-                
-                <Button
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:id="@+id/buttonReversalTransaction"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"                   
-                    android:enabled="false"
-                    android:text="Reversal" />
 
                 <Button
-                    android:id="@+id/buttonLastTran"
+                    android:id="@+id/buttonParameters"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Parameters" />
+                
+                <Button
+                    android:id="@+id/buttonReversalTransaction"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:layout_weight="1"                   
-                    android:text="@string/lasttran" />
+                    android:layout_weight="2"
+                    android:enabled="false"
+                    android:text="Reversal" />
 
             </LinearLayout>
 

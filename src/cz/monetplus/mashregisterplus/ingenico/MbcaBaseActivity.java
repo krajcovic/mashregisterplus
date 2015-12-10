@@ -257,6 +257,15 @@ public class MbcaBaseActivity extends AdActivity {
 				doTransaction(TransactionCommand.MBCA_BALANCING);
 			}
 		});
+		
+		temp = (Button) findViewById(R.id.buttonParameters);
+		temp.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				doTransaction(TransactionCommand.MBCA_PARAMETERS);
+			}
+		});
 	}
 
 	@Override
