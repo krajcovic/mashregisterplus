@@ -3,10 +3,13 @@ package cz.monetplus.mashregisterplus.ingenico;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +43,8 @@ public class MbcaBaseActivity extends AdActivity {
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE_INSECURE = 33334;
+
+	private static final String TAG = "MbcaBaseActivity";
 
 	// private final ReentrantLock lock = new ReentrantLock();
 
@@ -118,11 +123,11 @@ public class MbcaBaseActivity extends AdActivity {
 		if (blueHwAddress.getText().equals(getString(R.string.default_select_device))) {
 			setButtons(false);
 		}
-
+		
 		this.posCallbackee = new PosCallbackee(MbcaBaseActivity.this, getApplicationContext());
 
 	}
-
+	
 	/**
 	 * @param command
 	 */

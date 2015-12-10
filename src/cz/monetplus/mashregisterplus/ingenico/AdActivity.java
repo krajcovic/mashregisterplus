@@ -3,8 +3,12 @@ package cz.monetplus.mashregisterplus.ingenico;
 import com.google.android.gms.ads.AdView;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
+import android.widget.EditText;
 
 public class AdActivity extends Activity {
 
@@ -75,5 +79,4 @@ public class AdActivity extends Activity {
 			adView.resume();
 		}
 	}
-
 }

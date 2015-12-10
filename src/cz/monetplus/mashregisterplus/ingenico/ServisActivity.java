@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ public class ServisActivity extends AdActivity {
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE_INSECURE = 33334;
+
+	private static final String TAG = "ServisActivity";
 
 	private TextView mAnswerTextView;
 	private TextView blueHwAddress;
@@ -88,13 +91,18 @@ public class ServisActivity extends AdActivity {
 	}
 
 	private void updateTerminalName() {
+		try {
 		BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (defaultAdapter != null) {
 			BluetoothDevice remoteDevice = defaultAdapter.getRemoteDevice(blueHwAddress.getText().toString());
+//			remoteDevice = defaultAdapter.getRemoteDevice("00:00:00:00:00:00");
 			if (remoteDevice != null) {
 				EditText ettn = (EditText) findViewById(R.id.editTextTerminalName);
 				ettn.setText(remoteDevice.getName());
 			}
+		}
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage());
 		}
 	}
 

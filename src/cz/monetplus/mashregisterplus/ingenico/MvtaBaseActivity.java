@@ -3,10 +3,13 @@ package cz.monetplus.mashregisterplus.ingenico;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +42,8 @@ public class MvtaBaseActivity extends AdActivity {
 
 	// Intent request codes
 	private static final int REQUEST_CONNECT_DEVICE_INSECURE = 33334;
+
+	private static final String TAG = "MvtaBaseActivity";
 
 	// private final ReentrantLock lock = new ReentrantLock();
 
@@ -138,11 +143,11 @@ public class MvtaBaseActivity extends AdActivity {
 				getString(R.string.default_select_device))) {
 			setButtons(false);
 		}
-
+		
 		this.posCallbackee = new PosCallbackee(MvtaBaseActivity.this,
 				getApplicationContext());
 	}
-
+	
 	private void doTransaction(TransactionCommand command) {
 		try {
 			mAnswerTextView.setText("Calling " + command);
