@@ -129,7 +129,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:contentDescription="Partial payment" />
+                    android:contentDescription="Partial payment"
+                    android:hint="PP" />
 
                 <EditText
                     android:id="@+id/editPrice"
@@ -164,9 +165,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:ems="20"
                     android:inputType="text"
-                    android:maxLength="10"
+                    android:maxLength="20"
                     android:text="@string/text_invoice_default_value" >
 
                     <requestFocus />
@@ -203,12 +204,21 @@
                     style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
-                    android:id="@+id/buttonPayTransaction"
+                    android:id="@+id/buttonSmartPay"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/dotransactionpay"
-                    style="?android:attr/buttonBarButtonStyle" />
+                    android:text="@string/dotransactionpay" />
+
+                <Button
+                    android:id="@+id/buttonReturn"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="@string/doreturn" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -232,12 +242,12 @@
                     style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
-                    android:id="@+id/buttonReturn"
+                    android:id="@+id/buttonRecharging"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:text="@string/doreturn"
-                    style="?android:attr/buttonBarButtonStyle" />
+                    android:layout_weight="2"
+                    android:text="@string/dotransactionrecharging" />
 
             </LinearLayout>
             

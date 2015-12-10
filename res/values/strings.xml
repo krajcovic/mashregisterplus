@@ -45,5 +45,7 @@
     <string name="lasttran">LastTran</string>
     <string name="text_invoice_ticket">Inv/Ticket</string>
     <string name="text_ticket_number_default_value">A123B123C123D123</string>
+    <string name="dotransactionrecharging">Recharging</string>
+    <string name="maitenanceupdate">MaitenanceUpdate</string>
 
 </resources>

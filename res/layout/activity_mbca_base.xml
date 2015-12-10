@@ -196,12 +196,13 @@
                     style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
-                    android:id="@+id/buttonPayTransaction"
+                    android:id="@+id/buttonMbcaPay"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:text="@string/dotransactionpay"
-                    style="?android:attr/buttonBarButtonStyle" />
+                    android:text="@string/dotransactionpay" />
+
             </LinearLayout>
 
             <LinearLayout

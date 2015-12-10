@@ -176,12 +176,22 @@ public class SmartShopBaseActivity extends AdActivity {
 			}
 		});
 
-		temp = (Button) findViewById(R.id.buttonPayTransaction);
+		temp = (Button) findViewById(R.id.buttonSmartPay);
 		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				doTransacation(TransactionCommand.SMART_SHOP_PAY);
+			}
+
+		});
+		
+		temp = (Button) findViewById(R.id.buttonRecharging);
+		temp.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				doTransacation(TransactionCommand.SMART_SHOP_RECHARGING);
 			}
 
 		});
@@ -306,7 +316,9 @@ public class SmartShopBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonBalancing);
 		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonPayTransaction);
+		button = (Button) findViewById(R.id.buttonSmartPay);
+		button.setEnabled(enabled);
+		button = (Button) findViewById(R.id.buttonRecharging);
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonReturn);
 		button.setEnabled(enabled);

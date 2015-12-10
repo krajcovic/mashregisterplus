@@ -150,6 +150,26 @@ public class ServisActivity extends AdActivity {
 				}
 			}
 		});
+
+		Button updateButton = (Button) findViewById(R.id.buttonMaintenanceUpdate);
+		updateButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mAnswerTextView.setText("Calling disconnecting...");
+				try {
+					// ShowTransactionOut(new TransactionOu));
+					mAnswerTextView.setText("Calling " + TransactionCommand.MAINTENANCE_UPDATE);
+					TransactionIn transIn = new TransactionIn(blueHwAddress.getText().toString(),
+							TransactionCommand.MAINTENANCE_UPDATE, posCallbackee);
+
+					transactionTask = new DoTransactionTask();
+					transactionTask.execute(transIn);
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+				}
+			}
+		});
 	}
 
 	@Override

@@ -204,7 +204,7 @@ public class MbcaBaseActivity extends AdActivity {
 			}
 		});
 
-		temp = (Button) findViewById(R.id.buttonPayTransaction);
+		temp = (Button) findViewById(R.id.buttonMbcaPay);
 		temp.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -341,7 +341,7 @@ public class MbcaBaseActivity extends AdActivity {
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonBalancing);
 		button.setEnabled(enabled);
-		button = (Button) findViewById(R.id.buttonPayTransaction);
+		button = (Button) findViewById(R.id.buttonMbcaPay);
 		button.setEnabled(enabled);
 		button = (Button) findViewById(R.id.buttonLastTran);
 		button.setEnabled(enabled);
