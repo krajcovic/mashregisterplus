@@ -10,13 +10,14 @@
     <string name="merchantId">Merchant ID:</string>
     <string name="payButtonText">Pay with intent</string>
     <string name="CompanyName">Monet+ a.s.</string>
-    <string name="TextBTAddr">BT addr:</string>
+    <string name="TextBTAddr">BT:</string>
     <string name="testedBTHWAddress"></string>
     <string name="select_device">Select device</string>
     <string name="text_currency">Currency:</string>
     <string name="text_invoice">Invoice:</string>
     <string name="text_invoice_default_value">1234567890</string>
     <string name="text_tranid_default_value">1234567890</string>
+    <string name="text_card_type_default_value"></string>
     <string name="dotransactionhandshake">Handshake</string>
     <string name="dotransactionbalancing">Balancing</string>
     <string name="dotransactionpay">Pay</string>
@@ -44,8 +45,10 @@
     <string name="title_tcp_enabled">TCP enabled</string>
     <string name="lasttran">LastTran</string>
     <string name="text_invoice_ticket">Inv/Ticket</string>
-    <string name="text_ticket_number_default_value">A123B123C123D123</string>
+    <string name="text_ticket_number_default_value"></string>
     <string name="dotransactionrecharging">Recharging</string>
     <string name="maitenanceupdate">MaitenanceUpdate</string>
+    <string name="textPartialPayment">Partial payment:</string>
+    <string name="textCardType">Card type:</string>
 
 </resources>

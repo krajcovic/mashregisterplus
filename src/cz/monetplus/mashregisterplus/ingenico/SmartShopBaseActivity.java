@@ -49,6 +49,7 @@ public class SmartShopBaseActivity extends AdActivity {
 	// private final ReentrantLock lock = new ReentrantLock();
 
 	private EditText mAmountIdEditText;
+	private EditText mCardType;
 	private Spinner mCurrencySpinner;
 	private EditText mInvoiceIdEditText;
 	private CheckBox cbPartialPayment;
@@ -82,6 +83,7 @@ public class SmartShopBaseActivity extends AdActivity {
 		super.adAddView();
 
 		mAmountIdEditText = (EditText) findViewById(R.id.editPrice);
+		mCardType = (EditText) findViewById(R.id.editCardType);
 		mCurrencySpinner = (Spinner) findViewById(R.id.spinnerCurrency);
 		mInvoiceIdEditText = (EditText) findViewById(R.id.editTextInvoice);
 		mTicketNumberEditText = (EditText) findViewById(R.id.editTicketNumber);
@@ -136,6 +138,11 @@ public class SmartShopBaseActivity extends AdActivity {
 					.toString(), command, posCallbackee);
 			transIn.setAmount(Long.valueOf((long) (Double
 					.valueOf(mAmountIdEditText.getText().toString()) * 100)));
+			
+			if(mCardType.getText().toString().length() > 0) {
+				transIn.setCardType(Integer.valueOf(mCardType.getText().toString()));
+			}
+			
 			transIn.setCurrency(Integer.valueOf(currentCurrency));
 			transIn.setInvoice(mInvoiceIdEditText.getText().toString());
 			transIn.setPartialPayment(cbPartialPayment.isChecked());

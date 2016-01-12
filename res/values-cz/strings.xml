@@ -10,13 +10,14 @@
     <string name="merchantId">ID Obchodníka:</string>
     <string name="payButtonText">Platba s intentem</string>
     <string name="CompanyName">Monet+ a.s.</string>
-    <string name="TextBTAddr">BT adresa:</string>
+    <string name="TextBTAddr">BT:</string>
     <string name="testedBTHWAddress"></string>
     <string name="select_device">Vyber zařízení</string>
     <string name="text_currency">Měna:</string>
     <string name="text_invoice">VS:</string>
     <string name="text_invoice_default_value">1234567890</string>
     <string name="text_tranid_default_value">1234567890</string>
+    <string name="text_card_type_default_value"></string>
     <string name="dotransactionhandshake">Handshake</string>
     <string name="dotransactionbalancing">Uzávěrka</string>
     <string name="dotransactionpay">Platba</string>
