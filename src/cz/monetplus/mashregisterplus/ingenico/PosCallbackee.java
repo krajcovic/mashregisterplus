@@ -2,9 +2,16 @@ package cz.monetplus.mashregisterplus.ingenico;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.provider.ContactsContract.CommonDataKinds.Callable;
 import android.util.Log;
 import android.widget.Toast;
 import cz.monetplus.blueterm.PosCallbacks;
@@ -50,6 +57,13 @@ public class PosCallbackee implements PosCallbacks {
 	public void ticketFinish() {
 		// Ukonci listek
 		getTicket().add("*** Ticket finish ***");
+
+		Intent intent = new Intent(context, TicketListActivity.class);
+		Bundle b = new Bundle();
+		b.putStringArrayList("ticket", (ArrayList<String>) this.getTicket());
+		intent.putExtras(b);
+		activity.startActivity(intent);
+
 		Log.i(TAG, "Call cut on printer");
 	}
 
@@ -78,48 +92,36 @@ public class PosCallbackee implements PosCallbacks {
 
 	@Override
 	public Boolean isSignOk() {
-		// synchronized (isSignOk) {
-		// Runnable runnable = new Runnable() {
-		//
-		// final DialogInterface.OnClickListener dialogClickListener = new
-		// DialogInterface.OnClickListener() {
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
-		// switch (which) {
-		// case DialogInterface.BUTTON_POSITIVE:
-		// // Yes button clicked
-		// isSignOk = Boolean.TRUE;
-		// break;
-		//
-		// case DialogInterface.BUTTON_NEGATIVE:
-		// isSignOk = Boolean.TRUE;
-		// break;
-		// }
-		// this.notify();
-		// }
-		// };
-		//
-		// public void run() {
-		// AlertDialog.Builder builder = new AlertDialog.Builder(
-		// activity);
-		// builder.setMessage("Souhlasí podpis?")
-		// .setPositiveButton("Ano", dialogClickListener)
-		// .setNegativeButton("Ne", dialogClickListener)
-		// .show();
-		// }
-		// };
-		//
-		// activity.runOnUiThread(runnable);
+
+		Boolean signValue = Boolean.FALSE;
+
+		// FutureTask<Boolean> futureResult = new FutureTask<Boolean>(new
+		// YesNoCalleableDialog(activity));
+		// activity.runOnUiThread(futureResult);
 		//
 		// try {
-		// runnable.wait();
+		// signValue = futureResult.get();
+		// } catch (ExecutionException wrappedException) {
+		// Throwable cause = wrappedException.getCause();
+		// Log.e(TAG, wrappedException.getMessage(), cause);
 		// } catch (InterruptedException e) {
 		// Log.e(TAG, e.getMessage());
 		// }
-		//
-		// }
 
-		return Boolean.TRUE;
+		YesNoRunnableDialog yesNoRunnableDialog = new YesNoRunnableDialog(activity);
+		activity.runOnUiThread(yesNoRunnableDialog);
+
+		// I cannot use notify - wait, becose is some problem with handling
+		// notification.
+		// TODO: solve it later
+		while (yesNoRunnableDialog.getIsSignOk() == null) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+			}
+		}
+
+		return yesNoRunnableDialog.getIsSignOk();
 	}
 
 	@Override

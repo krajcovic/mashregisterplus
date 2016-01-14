@@ -259,16 +259,16 @@ public class MvtaBaseActivity extends AdActivity {
 					Toast.makeText(getApplicationContext(), result,
 							Toast.LENGTH_LONG).show();
 
-					if (!posCallbackee.getTicket().isEmpty()) {
-						Intent intent = new Intent(getApplicationContext(),
-								TicketListActivity.class);
-						Bundle b = new Bundle();
-						b.putStringArrayList("ticket",
-								(ArrayList<String>) posCallbackee.getTicket());
-						intent.putExtras(b);
-
-						startActivity(intent);
-					}
+//					if (!posCallbackee.getTicket().isEmpty()) {
+//						Intent intent = new Intent(getApplicationContext(),
+//								TicketListActivity.class);
+//						Bundle b = new Bundle();
+//						b.putStringArrayList("ticket",
+//								(ArrayList<String>) posCallbackee.getTicket());
+//						intent.putExtras(b);
+//
+//						startActivity(intent);
+//					}
 				}
 			});
 		}
